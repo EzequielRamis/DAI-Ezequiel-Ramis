@@ -15,16 +15,16 @@ public class ActivityOne extends AppCompatActivity {
         setContentView(R.layout.activity_one);
 
             }
-    public void showResults(View v){
+    public void one_showResults(View v){
         /*Definición de variables*/
         EditText editTextOne, editTextTwo;
         TextView resAOne, resATwo, resB,resC;
-        editTextOne= findViewById(R.id.editTextOne);
-        editTextTwo=findViewById(R.id.editTextTwo);
-        resAOne=findViewById(R.id.ResAOne);
-        resATwo=findViewById(R.id.ResATwo);
-        resB=findViewById(R.id.ResB);
-        resC=findViewById(R.id.ResC);
+        editTextOne= findViewById(R.id.one_editTextOne);
+        editTextTwo=findViewById(R.id.one_editTextTwo);
+        resAOne=findViewById(R.id.one_resAOne);
+        resATwo=findViewById(R.id.one_resATwo);
+        resB=findViewById(R.id.one_resB);
+        resC=findViewById(R.id.one_resC);
 
         /*Mostar resultados del punto A*/
         resAOne.setText("Largo del primer texto: " + String.valueOf(editTextOne.getText().length()));

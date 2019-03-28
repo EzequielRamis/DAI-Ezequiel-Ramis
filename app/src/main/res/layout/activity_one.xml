@@ -7,45 +7,45 @@
         android:layout_height="wrap_content"
         android:hint="Ingrese texto"
         android:layout_margin="25dp"
-        android:id="@+id/editTextOne"/>
+        android:id="@+id/one_editTextOne"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Ingrese texto"
         android:layout_margin="25dp"
-        android:id="@+id/editTextTwo"/>
+        android:id="@+id/one_editTextTwo"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
         android:text="Aceptar"
-        android:onClick="showResults"/>
+        android:onClick="one_showResults"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:id="@+id/ResAOne"
+        android:id="@+id/one_resAOne"
         android:layout_margin="25dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:id="@+id/ResATwo"
+        android:id="@+id/one_resATwo"
         android:layout_margin="25dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:id="@+id/ResB"
+        android:id="@+id/one_resB"
         android:layout_margin="25dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Combinación de los textos: "
-        android:id="@+id/ResC"
+        android:id="@+id/one_resC"
         android:layout_margin="25dp"
         />
 </LinearLayout>
