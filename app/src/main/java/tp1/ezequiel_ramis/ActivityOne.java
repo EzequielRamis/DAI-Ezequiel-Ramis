@@ -34,5 +34,6 @@ public class ActivityOne extends AppCompatActivity {
         resB.setText("Cant. caract. excedentes: " + String.valueOf(Math.abs(editTextOne.getText().length()-editTextTwo.getText().length())));
 
         /*Mostrar resultado del punto C*/
+        resC.setText("Combinación de los textos: " + String.valueOf(editTextOne.getText()).substring(0,3)+String.valueOf(editTextTwo.getText()).substring(0,3));
     }
 }
