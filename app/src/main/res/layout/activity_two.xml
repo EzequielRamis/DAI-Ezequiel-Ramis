@@ -18,7 +18,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Ingrese texto"
+        android:hint="Ingrese caracter a buscar"
         android:layout_margin="25dp"
         android:id="@+id/two_editTextChar"
         android:maxLength="1"/>

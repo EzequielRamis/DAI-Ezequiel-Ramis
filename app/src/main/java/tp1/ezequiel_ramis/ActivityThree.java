@@ -21,7 +21,7 @@ public class ActivityThree extends AppCompatActivity {
         TextView textView = findViewById(R.id.three_res);
 
         /*Punto Opcional: Validar la cant minima de caracteres*/
-        int minCarac=5;
+        int minCarac=3;
         if(editText.getText().length() <= minCarac){
             Toast.makeText(getApplicationContext(), "Ingreso inválido: No se ingresó texto de más de "+ minCarac +" caracteres", Toast.LENGTH_LONG).show();
             return;
