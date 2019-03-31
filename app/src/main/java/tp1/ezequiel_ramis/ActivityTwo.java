@@ -20,25 +20,31 @@ public class ActivityTwo extends AppCompatActivity {
     public void two_showResults(View v){
         /*Definición de variables*/
         int cantAs = 0;
-        EditText editText;
-        CheckBox checkBox;
-        TextView textView;
-        editText=findViewById(R.id.two_editText);
-        checkBox=findViewById(R.id.two_checkBox);
-        textView=findViewById(R.id.two_res);
+        EditText editText=findViewById(R.id.two_editText);
+        CheckBox checkBox=findViewById(R.id.two_checkBox);
+        TextView textView=findViewById(R.id.two_res);
+
+        /*Punto Opcional: Definir variable EditText de un char*/
+        EditText editTextChar=findViewById(R.id.two_editTextChar);
+        if(editTextChar.getText().length() == 0){
+            Toast.makeText(getApplicationContext(), "No ingresó caracter a buscar", Toast.LENGTH_LONG).show();
+            return;
+        }
+        char charInput = editTextChar.getText().toString().toLowerCase().toCharArray()[0];
 
         /*Checkear la cant de caracteres*/
         if(checkBox.isChecked() && editText.getText().length() <= 10){
             Toast.makeText(getApplicationContext(), "Ingreso inválido: No tiene más de diez caracteres", Toast.LENGTH_LONG).show();
             return;
         }
-
-        /*Calcular cant de As*/
+        /*Si el if anterior es falso sigue el algoritmo*/
+        /*Calcular cant de CARACTER INGRESADO en el texto*/
         for(char ch : String.valueOf(editText.getText()).toLowerCase().toCharArray()){
-            cantAs+= (ch == 'a') ? 1 : 0;
+            /*Si el caracter es igual sumarle a cant 1, si no 0*/
+            cantAs+= (ch == charInput) ? 1 : 0;
         }
 
         /*Mostrar cant de As*/
-        textView.setText("Cantidad de A en el texto: " + cantAs);
+        textView.setText("Cantidad de '"+ charInput+"' en el texto: " + cantAs);
     }
 }

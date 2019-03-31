@@ -14,6 +14,13 @@
         android:hint="Ingrese texto"
         android:layout_margin="25dp"
         android:id="@+id/one_editTextTwo"/>
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:id="@+id/one_seekBar"
+        android:min="1"
+        android:max="10"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,27 +32,27 @@
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/one_resAOne"
-        android:layout_margin="25dp"
+        android:layout_marginLeft="25dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/one_resATwo"
-        android:layout_margin="25dp"
+        android:layout_marginLeft="25dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/one_resB"
-        android:layout_margin="25dp"
+        android:layout_marginLeft="25dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Combinación de los textos: "
+        android:text=""
         android:id="@+id/one_resC"
-        android:layout_margin="25dp"
+        android:layout_marginLeft="25dp"
         />
 </LinearLayout>

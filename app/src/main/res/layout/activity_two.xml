@@ -15,6 +15,13 @@
         android:layout_marginLeft="25dp"
         android:text="Mínimo de diez caracteres"
         android:id="@+id/two_checkBox"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese texto"
+        android:layout_margin="25dp"
+        android:id="@+id/two_editTextChar"
+        android:maxLength="1"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,6 +33,6 @@
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/two_res"
-        android:layout_margin="25dp"
+        android:layout_marginLeft="25dp"
         />
 </LinearLayout>
