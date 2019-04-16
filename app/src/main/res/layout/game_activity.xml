@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_margin="50dp">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="3"
+        android:rowCount="3">
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
+
+            />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima02"
+
+            />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
+
+            />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima02"
+
+            />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima02"
+
+            />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
+
+            />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima02"
+
+            />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
+
+            />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima02"
+
+            />
+    </GridLayout>
+</LinearLayout>
