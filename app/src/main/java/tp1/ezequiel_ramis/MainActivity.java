@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
         if(nombre.getText().toString().equals("") || res.getText().toString().equals("")) {toast1.show(); return;}
         if(!res.getText().toString().equals(""+captchaRes)) {toast2.show(); return;}
 
-        startActivity(new Intent(MainActivity.this, GameActivity.class));
+        Bundle PaqueteDeDatos=new Bundle();
+        PaqueteDeDatos.putString("nombreIngresado", nombre.getText().toString());
+
+        Intent MainToGame=new Intent(MainActivity.this, GameActivity.class);
+        MainToGame.putExtras(PaqueteDeDatos);
+        startActivity(MainToGame);
     }
 }

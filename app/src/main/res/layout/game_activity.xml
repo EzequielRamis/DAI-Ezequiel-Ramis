@@ -5,10 +5,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_margin="50dp">
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginBottom="10dp"
+        android:id="@+id/HolaNombre"/>
     <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:columnCount="3"
         android:rowCount="3">
 
@@ -19,6 +24,7 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima01"
+            android:id="@+id/Btn1"
 
             />
 
@@ -29,6 +35,7 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima02"
+            android:id="@+id/Btn2"
 
             />
 
@@ -39,6 +46,7 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima01"
+            android:id="@+id/Btn3"
 
             />
 
@@ -49,6 +57,7 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima02"
+            android:id="@+id/Btn4"
 
             />
 
@@ -59,6 +68,7 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima02"
+            android:id="@+id/Btn5"
 
             />
 
@@ -69,6 +79,7 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima01"
+            android:id="@+id/Btn6"
 
             />
 
@@ -79,6 +90,7 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima02"
+            android:id="@+id/Btn7"
 
             />
 
@@ -89,6 +101,7 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima01"
+            android:id="@+id/Btn8"
 
             />
 
@@ -99,7 +112,30 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima02"
+            android:id="@+id/Btn9"
 
             />
     </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="100px">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Partida normal"
+            android:onClick="partidaNormal"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Partida al azar"
+            android:onClick="partidaAlAzar"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gana por mí"
+            android:onClick="ganaPorMi"/>
+    </LinearLayout>
 </LinearLayout>
