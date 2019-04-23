@@ -19,7 +19,7 @@
             android:layout_height="wrap_content" android:text="Nombre" android:labelFor="@+id/editTextNombre"/>
 
         <EditText
-            android:id="@+id/editTextNombre"
+            android:id="@+id/NombreET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Ingrese nombre"/>
@@ -36,14 +36,15 @@
             android:layout_height="wrap_content" android:text="Captcha" android:labelFor="@+id/editTextCaptcha"/>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:text="Suma"/>
+            android:layout_height="wrap_content" android:text="Suma"
+            android:id="@+id/SumaTV"/>
 
         <EditText
-            android:id="@+id/editTextCaptcha"
+            android:id="@+id/ResET"
             android:inputType="number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ingrese nombre"/>
+            android:hint="Ingrese resultado"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
