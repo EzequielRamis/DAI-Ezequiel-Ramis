@@ -24,7 +24,8 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima01"
-            android:id="@+id/Btn1"
+            android:id="@+id/Btn0"
+            android:tag="0"
 
             />
 
@@ -35,7 +36,8 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima02"
-            android:id="@+id/Btn2"
+            android:id="@+id/Btn1"
+            android:tag="1"
 
             />
 
@@ -46,7 +48,20 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima01"
+            android:id="@+id/Btn2"
+            android:tag="2"
+
+            />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima02"
             android:id="@+id/Btn3"
+            android:tag="3"
 
             />
 
@@ -58,6 +73,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/ima02"
             android:id="@+id/Btn4"
+            android:tag="4"
 
             />
 
@@ -67,8 +83,9 @@
             android:background="#FFFFFF"
             android:padding="0dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ima02"
+            android:src="@drawable/ima01"
             android:id="@+id/Btn5"
+            android:tag="5"
 
             />
 
@@ -78,19 +95,9 @@
             android:background="#FFFFFF"
             android:padding="0dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ima01"
+            android:src="@drawable/ima02"
             android:id="@+id/Btn6"
-
-            />
-
-        <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#FFFFFF"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ima02"
-            android:id="@+id/Btn7"
+            android:tag="6"
 
             />
 
@@ -101,7 +108,8 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima01"
-            android:id="@+id/Btn8"
+            android:id="@+id/Btn7"
+            android:tag="7"
 
             />
 
@@ -112,7 +120,8 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima02"
-            android:id="@+id/Btn9"
+            android:id="@+id/Btn8"
+            android:tag="8"
 
             />
     </GridLayout>
