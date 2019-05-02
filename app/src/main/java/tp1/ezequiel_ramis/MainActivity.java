@@ -29,14 +29,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void game(View v){
+        /*Definir variables*/
         EditText nombre=findViewById(R.id.NombreET);
         EditText res=findViewById(R.id.ResET);
         Toast toast1= Toast.makeText(getApplicationContext(), "No se ingresó todos los campos", Toast.LENGTH_SHORT);
         Toast toast2= Toast.makeText(getApplicationContext(), "Resultado invalido", Toast.LENGTH_SHORT);
 
+        /*Validación de los campos*/
         if(nombre.getText().toString().equals("") || res.getText().toString().equals("")) {toast1.show(); return;}
         if(!res.getText().toString().equals(""+captchaRes)) {toast2.show(); return;}
 
+        /*Enviar datos a la GameActivity*/
         Bundle PaqueteDeDatos=new Bundle();
         PaqueteDeDatos.putString("nombreIngresado", nombre.getText().toString());
 

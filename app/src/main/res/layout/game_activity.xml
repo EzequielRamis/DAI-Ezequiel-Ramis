@@ -4,124 +4,137 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_margin="50dp">
+    android:layout_margin="25dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:layout_marginBottom="10dp"
         android:id="@+id/HolaNombre"/>
-    <GridLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/HasWon" />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:columnCount="3"
-        android:rowCount="3">
+        android:rowCount="3"
+        android:layout_gravity="center_horizontal">
 
         <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#FFFFFF"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ima01"
             android:id="@+id/Btn0"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
             android:tag="0"
-
-            />
+            android:onClick="btnClicked"/>
 
         <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#FFFFFF"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ima02"
             android:id="@+id/Btn1"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
             android:tag="1"
+            android:onClick="btnClicked"
 
             />
 
         <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#FFFFFF"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ima01"
             android:id="@+id/Btn2"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
             android:tag="2"
+            android:onClick="btnClicked"
 
             />
 
         <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#FFFFFF"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ima02"
             android:id="@+id/Btn3"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
             android:tag="3"
+            android:onClick="btnClicked"
 
             />
 
         <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#FFFFFF"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ima02"
             android:id="@+id/Btn4"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
             android:tag="4"
+            android:onClick="btnClicked"
 
             />
 
         <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#FFFFFF"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ima01"
             android:id="@+id/Btn5"
-            android:tag="5"
-
-            />
-
-        <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#FFFFFF"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ima02"
-            android:id="@+id/Btn6"
-            android:tag="6"
-
-            />
-
-        <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:background="#FFFFFF"
             android:padding="0dp"
             android:scaleType="centerInside"
             android:src="@drawable/ima01"
-            android:id="@+id/Btn7"
-            android:tag="7"
+            android:tag="5"
+            android:onClick="btnClicked"
 
             />
 
         <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/Btn6"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:background="#FFFFFF"
             android:padding="0dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ima02"
+            android:src="@drawable/ima01"
+            android:tag="6"
+            android:onClick="btnClicked"
+
+            />
+
+        <ImageButton
+            android:id="@+id/Btn7"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
+            android:tag="7"
+            android:onClick="btnClicked"
+
+            />
+
+        <ImageButton
             android:id="@+id/Btn8"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="#FFFFFF"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ima01"
             android:tag="8"
+            android:onClick="btnClicked"
 
             />
     </GridLayout>
@@ -131,20 +144,28 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="100px">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/PlaysN"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Partida normal"
-            android:onClick="partidaNormal"/>
+            android:onClick="partidaNormal"
+            android:id="@+id/BtnNormal"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Partida al azar"
-            android:onClick="partidaAlAzar"/>
+            android:onClick="partidaAlAzar"
+            android:id="@+id/BtnAzar" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Gana por mí"
-            android:onClick="ganaPorMi"/>
+            android:onClick="partidaGMP"
+            android:id="@+id/BtnGPM"/>
+
     </LinearLayout>
 </LinearLayout>
