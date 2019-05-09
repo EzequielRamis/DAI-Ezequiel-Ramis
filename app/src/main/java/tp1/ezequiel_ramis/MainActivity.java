@@ -12,16 +12,4 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
-    public void activityOne(View v){
-        startActivity(new Intent(MainActivity.this, ActivityOne.class));
-    }
-
-    public void activityTwo(View v){
-        startActivity(new Intent(MainActivity.this, ActivityTwo.class));
-    }
-
-    public void activityThree(View v){
-        startActivity(new Intent(MainActivity.this, ActivityThree.class));
-    }
 }
