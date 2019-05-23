@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("AccesoAPI", "Starting Task");
 
-        myAdapter=new ArrayAdapter<String[]>(this, android.R.layout.simple_spinner_item, categoryList);
+        myAdapter=new ArrayAdapter<ArrayList<String>>(this, android.R.layout.simple_spinner_item, categoryList);
         myAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
         getCategoriaTask myTask=new getCategoriaTask();
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 URL myRoute=new URL("http://epok.buenosaires.gob.ar/getCategorias");
                 HttpURLConnection myConnection = (HttpURLConnection) myRoute.openConnection();
                 Log.d("AccesoAPI", "Connecting...");
-                if(myConnection.getResponseCode()===200){
+                if(myConnection.getResponseCode()==200){
                     Log.d("AccesoAPI", "Connected");
                     InputStream res=myConnection.getInputStream();
                     InputStreamReader resLector=new InputStreamReader(res, "UTF-8");
@@ -88,10 +88,16 @@ public class MainActivity extends AppCompatActivity {
                         readJson.beginObject();
                         int index = 0;
                         while (readJson.hasNext()){
+                            /*ArrayList names = new ArrayList<String>();
                             if(readJson.nextName().equals("nombre_normalizado")){
-                                categoryList.add(new String[2]);
-                                categoryList.get(index)[0] = readJson.nextString();
+                                names.add(readJson.nextString());
+                                categoryList.add(names.get(index));
                             }
+                            if(readJson.nextName().equals("nombre")){
+                                names.add(readJson.nextString());
+                                categoryList.add(names.get(index));
+                            }*/
+                            index++;
                         }
                     }
                 }
