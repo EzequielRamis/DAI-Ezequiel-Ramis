@@ -1,5 +1,6 @@
 package tp1.ezequiel_ramis;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
@@ -71,10 +73,27 @@ public class MainActivity extends AppCompatActivity {
 
     public void buscar(View view){
         RadioButton rb  = findViewById(R.id.Rb_N);
-        AsyncTask myTask;
-        if (rb.isChecked()) myTask = new findByName();
-        else myTask = new findByGeo();
-        myTask.execute();
+        Spinner sp = findViewById(R.id.Sp_Categoria);
+        Bundle findBundle=new Bundle();
+        if (rb.isChecked()){
+            EditText etN= findViewById(R.id.Et_N);
+            findBundle.putString("TipoDeBusqueda", "Nombre");
+            findBundle.putString("Categoria", sp.getSelectedItem().toString());
+            findBundle.putString("Nombre", etN.getText().toString());
+        }
+        else{
+            EditText etX = findViewById(R.id.Et_X);
+            EditText etY = findViewById(R.id.Et_Y);
+            EditText etR = findViewById(R.id.Et_R);
+            findBundle.putString("TipoDeBusqueda", "Geo");
+            findBundle.putString("Categoria", sp.getSelectedItem().toString());
+            findBundle.putString("X", etX.getText().toString());
+            findBundle.putString("Y", etY.getText().toString());
+            findBundle.putString("R", etR.getText().toString());
+        }
+        Intent ResultsActivity = new Intent(MainActivity.this, ActivityTwo.class);
+        ResultsActivity.putExtras(findBundle);
+        startActivity(ResultsActivity);
     }
 
 
