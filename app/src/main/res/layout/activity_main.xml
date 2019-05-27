@@ -14,13 +14,16 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Categoría y nombre"
-            android:id="@+id/Rb_CyN"/>
+            android:text="Nombre"
+            android:id="@+id/Rb_N"
+            android:onClick="rbConfig"
+            android:checked="true"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Geolocalización"
-            android:id="@+id/Rb_G"/>
+            android:id="@+id/Rb_G"
+            android:onClick="rbConfig"/>
     </RadioGroup>
 
     <TextView
@@ -62,5 +65,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Buscar"
-        android:onClick="Buscar"/>
+        android:onClick="buscar"/>
 </GridLayout>

@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 import android.util.Log;
+import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 
 import java.io.InputStream;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList categoryList;
+    ArrayList categoryListNormalized;
     Spinner myCategorySpinner;
     ArrayAdapter myAdapter;
 
@@ -26,19 +29,54 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        categoryList=new ArrayList<>();
+        findViewById(R.id.Et_X).setEnabled(false);
+        findViewById(R.id.Et_Y).setEnabled(false);
+        findViewById(R.id.Et_R).setEnabled(false);
+
+        categoryList=new ArrayList<String>();
+        categoryListNormalized=new ArrayList<String>();
         myCategorySpinner=findViewById(R.id.Sp_Categoria);
 
         Log.d("AccesoAPI", "Starting Task");
 
-        myAdapter=new ArrayAdapter<ArrayList<String>>(this, android.R.layout.simple_spinner_item, categoryList);
+        myAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoryList);
         myAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+
+        categoryList.add("Todas");
+        categoryListNormalized.add("");
 
         getCategoriaTask myTask=new getCategoriaTask();
         myTask.execute();
 
         Log.d("AccesoAPI", "Task Finished");
     }
+
+    public void rbConfig(View view){
+        switch (view.getId()){
+            case R.id.Rb_N:
+                findViewById(R.id.Et_X).setEnabled(false);
+                findViewById(R.id.Et_Y).setEnabled(false);
+                findViewById(R.id.Et_R).setEnabled(false);
+
+                findViewById(R.id.Et_N).setEnabled(true);
+                break;
+            case R.id.Rb_G:
+                findViewById(R.id.Et_N).setEnabled(false);
+
+                findViewById(R.id.Et_X).setEnabled(true);
+                findViewById(R.id.Et_Y).setEnabled(true);
+                findViewById(R.id.Et_R).setEnabled(true);
+        }
+    }
+
+    public void buscar(View view){
+        RadioButton rb  = findViewById(R.id.Rb_N);
+        AsyncTask myTask;
+        if (rb.isChecked()) myTask = new findByName();
+        else myTask = new findByGeo();
+        myTask.execute();
+    }
+
 
     private class getCategoriaTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -86,20 +124,15 @@ public class MainActivity extends AppCompatActivity {
                     readJson.beginArray();
                     while (readJson.hasNext()){
                         readJson.beginObject();
-                        int index = 0;
                         while (readJson.hasNext()){
-                            /*ArrayList names = new ArrayList<String>();
-                            if(readJson.nextName().equals("nombre_normalizado")){
-                                names.add(readJson.nextString());
-                                categoryList.add(names.get(index));
-                            }
-                            if(readJson.nextName().equals("nombre")){
-                                names.add(readJson.nextString());
-                                categoryList.add(names.get(index));
-                            }*/
-                            index++;
+                            actualItemName=readJson.nextName();
+                            if(actualItemName.equals("nombre")) categoryList.add(readJson.nextString());
+                            else if(actualItemName.equals("nombre_normalizado")) categoryListNormalized.add(readJson.nextString());
+                            else readJson.skipValue();
                         }
+                        readJson.endObject();
                     }
+                    readJson.endArray();
                 }
 
             }
