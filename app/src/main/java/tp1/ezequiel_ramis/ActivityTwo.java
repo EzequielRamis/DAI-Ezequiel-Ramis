@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
@@ -24,24 +25,32 @@ public class ActivityTwo extends AppCompatActivity {
 
     ArrayList resList;
     ListView myListView;
-    Adapter myAdapter;
+    ArrayAdapter myAdapter;
+    Bundle Response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two);
 
-        Bundle Response = this.getIntent().getExtras();
+        Response = this.getIntent().getExtras();
 
         resList = new ArrayList<String>();
         myListView = findViewById(R.id.Lv);
-        myAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, resList);
+        myAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, resList);
 
-        AsyncTask myTask;
-        if(Response.get("TipoDeBusqueda").equals("Nombre")) myTask= new findByName();
-        else myTask = new findByGeo();
+        if(Response.get("TipoDeBusqueda").equals("Nombre")){
+            findByName myTask;
+            myTask= new findByName();
+            myTask.execute();
+        }
+        else {
+            findByGeo myTask;
+            myTask = new findByGeo();
+            myTask.execute();
+        }
 
-        myTask.execute();
+
 
     }
 
@@ -49,7 +58,8 @@ public class ActivityTwo extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... Voids){
             try{
-                /*URL myRoute=new URL("http://epok.buenosaires.gob.ar/getCategorias");
+                String url = "http://epok.buenosaires.gob.ar/buscar/?texto="+Response.getString("Nombre")+"&categoria="+Response.getString("Categoria");
+                URL myRoute=new URL(url);
                 HttpURLConnection myConnection = (HttpURLConnection) myRoute.openConnection();
                 Log.d("AccesoAPI", "Connecting...");
                 if(myConnection.getResponseCode()==200){
@@ -61,7 +71,7 @@ public class ActivityTwo extends AppCompatActivity {
                 }
                 else{
                     Log.d("AccesoAPI", "Connection Error");
-                }*/
+                }
             } catch (Exception err) {
                 Log.d("AccesoAPI", "Error: " + err.getMessage());
             }
@@ -79,7 +89,8 @@ public class ActivityTwo extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... Voids){
             try{
-                /*URL myRoute=new URL("http://epok.buenosaires.gob.ar/getCategorias");
+                String url = "http://epok.buenosaires.gob.ar/reverseGeocoderLugares/?categorias="+Response.getString("Categoria")+"&x="+Response.getString("X")+"&y="+Response.getString("Y")+"&radio="+Response.getString("R");
+                URL myRoute=new URL(url);
                 HttpURLConnection myConnection = (HttpURLConnection) myRoute.openConnection();
                 Log.d("AccesoAPI", "Connecting...");
                 if(myConnection.getResponseCode()==200){
@@ -91,7 +102,7 @@ public class ActivityTwo extends AppCompatActivity {
                 }
                 else{
                     Log.d("AccesoAPI", "Connection Error");
-                }*/
+                }
             } catch (Exception err) {
                 Log.d("AccesoAPI", "Error: " + err.getMessage());
             }
@@ -102,6 +113,40 @@ public class ActivityTwo extends AppCompatActivity {
         protected void onPostExecute(Void aVoid){
             super.onPostExecute(aVoid);
             myListView.setAdapter(myAdapter);
+        }
+    }
+
+    public void processJson(InputStreamReader readStream){
+        JsonReader readJson=new JsonReader(readStream);
+        try{
+            readJson.beginObject();
+            while (readJson.hasNext()){
+                String actualItemName=readJson.nextName();
+                Log.d("LecturaJson", "Nombre del actual item: "+actualItemName);
+                if(actualItemName.equals("instancias")) {
+                    readJson.beginArray();
+                    while (readJson.hasNext()) {
+                        readJson.beginObject();
+                        int index = 0;
+                        while (readJson.hasNext()) {
+                            actualItemName = readJson.nextName();
+                            if (actualItemName.equals("nombre")){
+                                resList.add(readJson.nextString());
+                                Log.d("Objetos", ""+resList.get(index));
+                                index++;
+                            }
+                            else readJson.skipValue();
+                        }
+                        readJson.endObject();
+                    }
+                    readJson.endArray();
+
+                }
+                else readJson.skipValue();
+            }
+            readJson.endObject();
+        } catch (Exception err){
+            Log.d("LecturaJson", "Error: " + err.getMessage());
         }
     }
 }
