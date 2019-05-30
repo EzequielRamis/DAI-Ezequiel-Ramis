@@ -58,7 +58,7 @@ public class ActivityTwo extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... Voids){
             try{
-                String url = "http://epok.buenosaires.gob.ar/buscar/?texto="+Response.getString("Nombre")+"&categoria="+Response.getString("Categoria");
+                String url = "http://epok.buenosaires.gob.ar/buscar/?texto="+Response.getString("Nombre")+"&categorias="+Response.getString("Categoria");
                 URL myRoute=new URL(url);
                 HttpURLConnection myConnection = (HttpURLConnection) myRoute.openConnection();
                 Log.d("AccesoAPI", "Connecting...");
@@ -90,6 +90,7 @@ public class ActivityTwo extends AppCompatActivity {
         protected Void doInBackground(Void... Voids){
             try{
                 String url = "http://epok.buenosaires.gob.ar/reverseGeocoderLugares/?categorias="+Response.getString("Categoria")+"&x="+Response.getString("X")+"&y="+Response.getString("Y")+"&radio="+Response.getString("R");
+                Log.d("URL", url);
                 URL myRoute=new URL(url);
                 HttpURLConnection myConnection = (HttpURLConnection) myRoute.openConnection();
                 Log.d("AccesoAPI", "Connecting...");

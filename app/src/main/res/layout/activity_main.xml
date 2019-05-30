@@ -48,17 +48,17 @@
     <EditText android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Ingrese X"
-        android:inputType="number"
+        android:inputType="numberDecimal|numberSigned"
         android:id="@+id/Et_X"/>
     <EditText android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Ingrese Y"
-        android:inputType="number"
+        android:inputType="numberDecimal|numberSigned"
         android:id="@+id/Et_Y"/>
     <EditText android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Ingrese Radio"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:id="@+id/Et_R"/>
 
     <Button
