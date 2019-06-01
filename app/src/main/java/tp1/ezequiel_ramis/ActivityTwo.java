@@ -58,7 +58,9 @@ public class ActivityTwo extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... Voids){
             try{
-                String url = "http://epok.buenosaires.gob.ar/buscar/?texto="+Response.getString("Nombre")+"&categorias="+Response.getString("Categoria");
+                String url = "http://epok.buenosaires.gob.ar/buscar/?texto="+Response.getString("Nombre");
+                url += (!Response.getString("Categoria").equals("Todas")) ? "&categorias="+Response.getString("CategoriaNormalized") : "";
+                Log.d("URL", url);
                 URL myRoute=new URL(url);
                 HttpURLConnection myConnection = (HttpURLConnection) myRoute.openConnection();
                 Log.d("AccesoAPI", "Connecting...");
@@ -89,7 +91,8 @@ public class ActivityTwo extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... Voids){
             try{
-                String url = "http://epok.buenosaires.gob.ar/reverseGeocoderLugares/?categorias="+Response.getString("Categoria")+"&x="+Response.getString("X")+"&y="+Response.getString("Y")+"&radio="+Response.getString("R");
+                String url = "http://epok.buenosaires.gob.ar/reverseGeocoderLugares/?x="+Response.getString("X")+"&y="+Response.getString("Y")+"&radio="+Response.getString("R");
+                url += (!Response.getString("Categoria").equals("Todas")) ? "&categorias="+Response.getString("CategoriaNormalized") : "";
                 Log.d("URL", url);
                 URL myRoute=new URL(url);
                 HttpURLConnection myConnection = (HttpURLConnection) myRoute.openConnection();

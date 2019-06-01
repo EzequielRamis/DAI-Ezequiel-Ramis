@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             EditText etN= findViewById(R.id.Et_N);
             findBundle.putString("TipoDeBusqueda", "Nombre");
             findBundle.putString("Categoria", sp.getSelectedItem().toString());
+            findBundle.putString("CategoriaNormalized", categoryListNormalized.get(sp.getSelectedItemPosition()).toString());
             findBundle.putString("Nombre", etN.getText().toString());
         }
         else{
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             EditText etR = findViewById(R.id.Et_R);
             findBundle.putString("TipoDeBusqueda", "Geo");
             findBundle.putString("Categoria", sp.getSelectedItem().toString());
+            findBundle.putString("CategoriaNormalized", categoryListNormalized.get(sp.getSelectedItemPosition()).toString());
             findBundle.putString("X", etX.getText().toString());
             findBundle.putString("Y", etY.getText().toString());
             findBundle.putString("R", etR.getText().toString());
