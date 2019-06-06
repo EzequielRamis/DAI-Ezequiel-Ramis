@@ -4,17 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".SearchTypeFragment">
+    android:layout_margin="25dp">
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Buscar por Nombre"
-        android:padding="25dp"/>
+        android:padding="25dp"
+        android:id="@+id/byName"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Buscar por Geolocalización"
-        android:padding="25dp"/>
+        android:padding="25dp"
+        android:id="@+id/byGeo"/>
 
 </LinearLayout>
