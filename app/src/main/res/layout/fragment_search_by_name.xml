@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:text="Buscar"
         android:id="@+id/searchByNameBtn"
+        android:tag="sbn"
         android:onClick="buscar"/>
 
 </LinearLayout>

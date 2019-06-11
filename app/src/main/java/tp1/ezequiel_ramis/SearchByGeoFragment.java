@@ -17,14 +17,16 @@ public class SearchByGeoFragment extends Fragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.fragment_search_by_geo, container, false);
 
         Spinner spCategoria=view.findViewById(R.id.Sp_Categoria);
-        EditText etN=view.findViewById(R.id.Et_N);
-        Button btn = view.findViewById(R.id.searchByNameBtn);
+        EditText etX=view.findViewById(R.id.Et_X);
+        EditText etY=view.findViewById(R.id.Et_Y);
+        EditText etR=view.findViewById(R.id.Et_R);
+        Button btn = view.findViewById(R.id.searchByGeoBtn);
 
         btn.setOnClickListener(this);
 
         return view;
     }
-    
+
     public void onClick(View view){
         Log.d("Boton apretado", String.valueOf(view.getId()));
     }
