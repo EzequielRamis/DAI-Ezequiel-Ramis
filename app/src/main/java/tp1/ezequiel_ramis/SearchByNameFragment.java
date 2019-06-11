@@ -26,13 +26,14 @@ public class SearchByNameFragment extends Fragment implements View.OnClickListen
     ArrayList categoryListNormalized;
     Spinner myCategorySpinner;
     ArrayAdapter myAdapter;
+    EditText etN;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_by_name, container, false);
 
-        Spinner spCategoria=view.findViewById(R.id.Sp_Categoria);
-        EditText etN=view.findViewById(R.id.Et_N);
+        myCategorySpinner = view.findViewById(R.id.Sp_Categoria);
+        etN=view.findViewById(R.id.Et_N);
         Button btn = view.findViewById(R.id.searchByNameBtn);
 
         btn.setOnClickListener(this);
@@ -46,8 +47,7 @@ public class SearchByNameFragment extends Fragment implements View.OnClickListen
         categoryList.add("Todas");
         categoryListNormalized.add("");
 
-        getCategoriaTask myTask=new getCategoriaTask();
-        myTask.execute();
+        new getCategoriaTask().execute();
 
         return view;
     }
@@ -117,6 +117,8 @@ public class SearchByNameFragment extends Fragment implements View.OnClickListen
     }
 
     public void onClick(View view){
-        Log.d("Boton apretado", String.valueOf(view.getId()));
+        MainActivity mainActivity;
+        mainActivity = (MainActivity) getActivity();
+        mainActivity.search("geo", categoryListNormalized.get(myCategorySpinner.getSelectedItemPosition()).toString(), etN.getText().toString(), "", "", "");
     }
 }
