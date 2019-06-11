@@ -1,6 +1,5 @@
 package tp1.ezequiel_ramis;
 
-import android.content.Intent;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.FragmentManager;
@@ -19,10 +18,19 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         fragmentManager=getFragmentManager();
-        Fragment searchTypeFr = new SearchTypeFragment();
 
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.holder, searchTypeFr);
-        fragmentTransaction.commit();
+    }
+
+    public void startSearchForm(View view){
+        if(view.getTag().toString().equals("nombre")) {
+            Fragment searchByNameFr = new SearchByNameFragment();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.holder, searchByNameFr);
+            fragmentTransaction.commit();}
+        else{
+            Fragment searchByGeoFr = new SearchByGeoFragment();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.holder, searchByGeoFr);
+            fragmentTransaction.commit();}
     }
 }

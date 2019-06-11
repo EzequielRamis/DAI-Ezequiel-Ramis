@@ -8,17 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
-public class SearchTypeFragment extends Fragment implements View.OnClickListener {
+public class SearchByNameFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search_type, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_by_name, container, false);
 
-        Button byName = view.findViewById(R.id.byName);
-        Button byGeo = view.findViewById(R.id.byGeo);
+        Spinner spCategoria=view.findViewById(R.id.Sp_Categoria);
+        EditText etN=view.findViewById(R.id.Et_N);
+        Button btn = view.findViewById(R.id.searchByNameBtn);
 
-        byName.setOnClickListener(this);
-        byGeo.setOnClickListener(this);
+        btn.setOnClickListener(this);
 
         return view;
     }
