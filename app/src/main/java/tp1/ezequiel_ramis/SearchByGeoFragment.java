@@ -123,7 +123,7 @@ public class SearchByGeoFragment extends Fragment implements View.OnClickListene
     public void onClick(View view){
         MainActivity mainActivity;
         mainActivity = (MainActivity) getActivity();
-        mainActivity.search("geo", categoryListNormalized.get(myCategorySpinner.getSelectedItemPosition()).toString(), "", etX.getText().toString(), etY.getText().toString(), etR.getText().toString());
+        mainActivity.startResponse("geo", categoryListNormalized.get(myCategorySpinner.getSelectedItemPosition()).toString(), "", etX.getText().toString(), etY.getText().toString(), etR.getText().toString());
     }
 
 

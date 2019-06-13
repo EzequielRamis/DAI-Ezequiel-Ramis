@@ -119,6 +119,6 @@ public class SearchByNameFragment extends Fragment implements View.OnClickListen
     public void onClick(View view){
         MainActivity mainActivity;
         mainActivity = (MainActivity) getActivity();
-        mainActivity.search("geo", categoryListNormalized.get(myCategorySpinner.getSelectedItemPosition()).toString(), etN.getText().toString(), "", "", "");
+        mainActivity.startResponse("nombre", categoryListNormalized.get(myCategorySpinner.getSelectedItemPosition()).toString(), etN.getText().toString(), "", "", "");
     }
 }
