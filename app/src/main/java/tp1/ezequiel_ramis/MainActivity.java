@@ -1,6 +1,7 @@
 package tp1.ezequiel_ramis;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.FragmentManager;
@@ -28,6 +29,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        startActivity(new Intent(this, MapsActivity.class));
         fragmentManager=getFragmentManager();
 
     }
