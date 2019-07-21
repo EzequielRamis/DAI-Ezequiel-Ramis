@@ -24,5 +24,6 @@
         app:layout_constraintTop_toBottomOf="@+id/TextViewTitleList"
         app:layout_constraintLeft_toRightOf="@+id/ImageViewMovieList"
         android:textSize="15dp"
-        android:layout_marginLeft="15dp"/>
+        android:layout_marginLeft="15dp"
+        android:id="@+id/TextViewYearList"/>
 </android.support.constraint.ConstraintLayout>

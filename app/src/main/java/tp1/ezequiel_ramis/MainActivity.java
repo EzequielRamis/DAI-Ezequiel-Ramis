@@ -23,10 +23,10 @@ public class MainActivity extends AppCompatActivity {
 
         Fragment fragmentSearch = new SearchFragment();
         Fragment fragmentResponse = new SearchResponseFragment();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.FrameLayoutSearch, fragmentSearch)
-                           .replace(R.id.FrameLayoutResponse, fragmentResponse)
-                           .commit();
+        fragmentManager.beginTransaction()
+                       .replace(R.id.FrameLayoutSearch, fragmentSearch)
+                       .replace(R.id.FrameLayoutResponse, fragmentResponse)
+                       .commit();
     }
 
     public void goToFragment(String frg) {
