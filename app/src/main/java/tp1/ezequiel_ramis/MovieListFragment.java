@@ -41,7 +41,7 @@ public class MovieListFragment extends Fragment {
         protected ArrayList<Movie> doInBackground(String... params) {
             ArrayList<Movie> list = new ArrayList<>();
             try {
-                URL route = new URL("http://www.omdbapi.com/?s="+params[0]+"&apikey=630be3b5");
+                URL route = new URL("http://www.omdbapi.com/?s="+params[0]+"&apikey=630be3b5&type=movie");
                 HttpURLConnection urlConnection = (HttpURLConnection) route.openConnection();
                 if (urlConnection.getResponseCode() == 200) {
                     InputStream inputStream = urlConnection.getInputStream();

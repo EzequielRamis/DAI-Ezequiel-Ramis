@@ -56,7 +56,7 @@ public class MovieFragment extends Fragment {
         protected Movie doInBackground(String... params) {
             Movie movie = new Movie();
             try {
-                URL route = new URL("http://www.omdbapi.com/?t="+params[0]+"&apikey=630be3b5&plot=full");
+                URL route = new URL("http://www.omdbapi.com/?t="+params[0]+"&apikey=630be3b5&plot=full&type=movie");
                 HttpURLConnection urlConnection = (HttpURLConnection) route.openConnection();
                 if (urlConnection.getResponseCode() == 200) {
                     InputStream inputStream = urlConnection.getInputStream();
