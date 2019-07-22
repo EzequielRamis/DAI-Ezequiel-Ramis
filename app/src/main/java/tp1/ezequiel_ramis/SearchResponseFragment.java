@@ -22,7 +22,7 @@ public class SearchResponseFragment extends Fragment {
     }
 
     public void setError(String error) {
-        textViewResponse.setText("Ups, se ve que " + error + " no existe. Tratá de buscar algo que sí exista");
+        textViewResponse.setText("Ups, se ve que la increíble y fantástica API de IMDB no localizó la película " + error + ". Tratá de buscar algo que sí exista, especialmente si la protagoniza Keanu Reeves");
     }
 
 }

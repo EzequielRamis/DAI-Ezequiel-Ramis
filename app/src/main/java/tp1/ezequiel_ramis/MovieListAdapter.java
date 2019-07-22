@@ -18,12 +18,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MovieAdapter extends BaseAdapter {
+public class MovieListAdapter extends BaseAdapter {
     private ArrayList<Movie> _movieArrayList;
     private Context _context;
     private ImageView imageViewPoster;
 
-    public MovieAdapter(ArrayList<Movie> movieArrayList, Context context) {
+    public MovieListAdapter(ArrayList<Movie> movieArrayList, Context context) {
         _movieArrayList = movieArrayList;
         _context = context;
     }
@@ -58,8 +58,7 @@ public class MovieAdapter extends BaseAdapter {
             Bitmap imageConverted = null;
             try {
                 URL route = new URL(params[0]);
-                HttpURLConnection urlConnection;
-                urlConnection = (HttpURLConnection) route.openConnection();
+                HttpURLConnection urlConnection = (HttpURLConnection) route.openConnection();
                 if (urlConnection.getResponseCode() == 200){
                     InputStream inputStream = urlConnection.getInputStream();
                     BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);

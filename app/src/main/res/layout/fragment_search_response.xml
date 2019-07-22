@@ -16,7 +16,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:textSize="30dp"
-            android:text="Buscá películas arriba de este texto, ninguno muerde"
+            android:text="Buscá películas arriba de este texto, ninguno muerde *gruñe de manera sospechosa*"
             android:id="@+id/TextViewResponse"/>
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

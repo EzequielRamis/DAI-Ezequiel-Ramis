@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager = getFragmentManager();
     FragmentTransaction fragmentTransaction;
     String searchValue = "_";
+    String selectedMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
