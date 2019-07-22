@@ -31,9 +31,9 @@ public class MovieListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        listView = view.findViewById(R.id.ListViewMovieList);
         MainActivity mainActivity = (MainActivity) getActivity();
         new getMovies().execute(mainActivity.searchValue);
-        listView = view.findViewById(R.id.ListViewMovieList);
         return view;
     }
 
@@ -57,13 +57,6 @@ public class MovieListFragment extends Fragment {
 
         protected void onPostExecute(ArrayList<Movie> movieArrayList) {
             arrayListMovie = movieArrayList;
-
-            for (Movie movie: arrayListMovie) {
-                Log.d("id", movie.get_id());
-                Log.d("title", movie.get_title());
-                Log.d("year", movie.get_year());
-                Log.d("poster", movie.get_poster());
-            }
             listView.setAdapter(new MovieListAdapter(arrayListMovie, getActivity()));
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

@@ -47,9 +47,9 @@ public class MovieListAdapter extends BaseAdapter {
         imageViewPoster = viewToReturn.findViewById(R.id.ImageViewMovieList);
         TextView textViewTitle = viewToReturn.findViewById(R.id.TextViewTitleList);
         TextView textViewYear = viewToReturn.findViewById(R.id.TextViewYearList);
-        new downloadImage().execute(getItem(i).get_poster());
         textViewTitle.setText(getItem(i).get_title());
         textViewYear.setText(getItem(i).get_year());
+        new downloadImage().execute(getItem(i).get_poster());
         return viewToReturn;
     }
 
