@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int responseCode, @NonNull String[] permissionNames, @NonNull int[] permissionResults) {
         if (responseCode == 1) {
             for (int i = 0; i < permissionNames.length; i++) {
-                
+
             }
         }
     }
