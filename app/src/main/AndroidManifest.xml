@@ -9,7 +9,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/iconapp"
-        android:label="la app esa de poner rectangulitos en la cara"
+        android:label="la app esa de poner rectangulitos"
         android:roundIcon="@mipmap/iconapp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
