@@ -24,10 +24,21 @@
         android:layout_marginTop="20dp"
         android:id="@+id/Results"/>
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="Adjuntar Imagen"
+        android:text="Adjuntar foto"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:paddingVertical="30dp"
-        android:id="@+id/SelectImage"/>
+        android:id="@+id/SelectPhoto"
+        android:onClick="SelectPhoto"/>
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Tomar foto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:paddingVertical="30dp"
+        android:id="@+id/TakePhoto"
+        android:onClick="TakePhoto"/>
 </android.support.constraint.ConstraintLayout>
