@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -38,8 +41,15 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     Button buttonSelect;
     Button buttonTake;
+    Button btnStats;
     int takePhotoCode = 0;
     int selectPhotoCode = 1;
+    FaceServiceRestClient serviceRestClient;
+
+
+    String[] genders;
+    double[] smiles, beards, ages, happy, sad, neutral, bald;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +61,16 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.Results);
         buttonSelect = findViewById(R.id.SelectPhoto);
         buttonTake = findViewById(R.id.TakePhoto);
+        btnStats = findViewById(R.id.btnStats);
 
         SharedPreferences preferences = getSharedPreferences("EzequielRamis", Context.MODE_PRIVATE);
 
         String endpoint = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0";
-        String key = "30a86d43dbfd4435b94e603fa28ee1ba";
+        //String key = "30a86d43dbfd4435b94e603fa28ee1ba";
+        String key = "ac5297c6dbf34a898a1e090428efab8e";
 
         try {
-            FaceServiceRestClient serviceRestClient = new FaceServiceRestClient(endpoint, key);
+            serviceRestClient = new FaceServiceRestClient(endpoint, key);
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 buttonSelect.setEnabled(false);
                 buttonTake.setEnabled(false);
@@ -98,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         textView.setText("Procesando...");
+        enableStats(false);
 
         if (requestCode==takePhotoCode && resultCode==RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
@@ -141,7 +154,25 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected Face[] doInBackground(InputStream... photoToProcess) {
+                publishProgress("Detectando caras...");
 
+                Face[] result = null;
+                try {
+                    FaceServiceClient.FaceAttributeType[] attributeTypes = new FaceServiceClient.FaceAttributeType[] {
+                            FaceServiceClient.FaceAttributeType.Age,
+                            FaceServiceClient.FaceAttributeType.Glasses,
+                            FaceServiceClient.FaceAttributeType.Smile,
+                            FaceServiceClient.FaceAttributeType.FacialHair,
+                            FaceServiceClient.FaceAttributeType.Gender,
+                            FaceServiceClient.FaceAttributeType.Hair,
+                            FaceServiceClient.FaceAttributeType.Emotion,
+                            FaceServiceClient.FaceAttributeType.Makeup,
+                    };
+                    result = serviceRestClient.detect(photoToProcess[0], true, false, attributeTypes);
+                } catch (Exception err) {
+                    Log.d("Procesar imagen", err.getMessage());
+                }
+                return result;
             }
 
             @Override
@@ -157,10 +188,92 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onPostExecute(Face[] result) {}
+            protected void onPostExecute(Face[] result) {
+                super.onPostExecute(result);
+                dialog.dismiss();
+                if (result==null) {
+                    Log.d("Procesar imagen", "AHHHHHHHHHHHHH");
+                    textView.setText("Error en procesamiento");
+                }
+                else {
+                    if (result.length > 0) {
+                        Log.d("Procesar imagen", "Recuadrar imagen");
+                        highlightFaces(photoToProcess, result);
+                        getData(result);
+                        enableStats(true);
+                    }
+                    else {
+                        Log.d("Procesar imagen", "No hay caras");
+                        textView.setText("No se detectó ninguna jeta");
+                    }
+                }
+            }
 
         }
 
         new processPhoto().execute(inputStream);
+    }
+
+    void highlightFaces(Bitmap image, Face[] faces) {
+        Bitmap imageNew = image.copy(Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(imageNew);
+        Paint pencil = new Paint();
+        pencil.setAntiAlias(true);
+        pencil.setStyle(Paint.Style.STROKE);
+        pencil.setColor(Color.RED);
+        pencil.setStrokeWidth(30);
+
+        for (Face face:faces) {
+            FaceRectangle faceRectangle = face.faceRectangle;
+            canvas.drawPoint(faceRectangle.left, faceRectangle.top, pencil);
+            canvas.drawPoint(faceRectangle.left + faceRectangle.width, faceRectangle.top, pencil);
+            canvas.drawPoint(faceRectangle.left, faceRectangle.top + faceRectangle.height, pencil);
+            canvas.drawPoint(faceRectangle.left + faceRectangle.width, faceRectangle.top + faceRectangle.height, pencil);
+        }
+
+        imageView.setImageBitmap(imageNew);
+    }
+
+    void enableStats(boolean b) {
+        textView.setText("");
+        btnStats.setEnabled(b);
+        if (b) btnStats.setVisibility(View.VISIBLE);
+        else btnStats.setVisibility(View.INVISIBLE);
+    }
+
+    void getData(Face[] faces) {
+        ages = new double[faces.length];
+        genders = new String[faces.length];
+        smiles = new double[faces.length];
+        beards = new double[faces.length];
+        happy = new double[faces.length];
+        sad = new double[faces.length];
+        neutral = new double[faces.length];
+        bald = new double[faces.length];
+        for (int i=0; i<faces.length; i++) {
+            ages[i] = faces[i].faceAttributes.age;
+            smiles[i] = faces[i].faceAttributes.smile;
+            beards[i] = faces[i].faceAttributes.facialHair.beard;
+            genders[i] = faces[i].faceAttributes.gender;
+            happy[i] = faces[i].faceAttributes.emotion.happiness;
+            sad[i] = faces[i].faceAttributes.emotion.sadness;
+            neutral[i] = faces[i].faceAttributes.emotion.neutral;
+            bald[i] = faces[i].faceAttributes.hair.bald;
+        }
+    }
+
+    void seeResults(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putDoubleArray("Ages", ages);
+        bundle.putDoubleArray("Smiles", smiles);
+        bundle.putDoubleArray("Beards", beards);
+        bundle.putStringArray("Genders", genders);
+        bundle.putDoubleArray("Happy", happy);
+        bundle.putDoubleArray("Sad", sad);
+        bundle.putDoubleArray("Neutral", neutral);
+        bundle.putDoubleArray("Bald", bald);
+        Intent intent = new Intent(MainActivity.this, ResultsActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
