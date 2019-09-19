@@ -2,8 +2,10 @@ package tp1.ezequiel_ramis;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -50,11 +52,21 @@ public class MainActivity extends AppCompatActivity {
     String[] genders;
     double[] smiles, beards, ages, happy, sad, neutral, bald;
 
+    AlertDialog.Builder builder;
+    String[] optionsS = {"Sonrisa", "Barba"};
+    boolean[] optionsB = {true, true};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle("Analizar atributos");
+        builder.setMultiChoiceItems(optionsS, optionsB, optionsL);
+        builder.setPositiveButton("Aceptar", ADlistener);
+        builder.create();
 
         dialog = new ProgressDialog(this);
         imageView = findViewById(R.id.Image);
@@ -65,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences("EzequielRamis", Context.MODE_PRIVATE);
 
-        String endpoint = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0";
+        String endpoint = "https://brazilsouth.api.cognitive.microsoft.com/face/v1.0";
         //String key = "30a86d43dbfd4435b94e603fa28ee1ba";
-        String key = "ac5297c6dbf34a898a1e090428efab8e";
+        String key = "06b4c956a3b0439fb5356b239519f22a";
 
         try {
             serviceRestClient = new FaceServiceRestClient(endpoint, key);
@@ -88,6 +100,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    DialogInterface.OnClickListener ADlistener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (which == -1) {
+                Log.d("Dialogo", "Positivo");
+                Log.d("Dialogo", optionsB[0] + " " + optionsB[1]);
+            }
+            else if (which == -2) {
+                Log.d("Dialogo", "Negativo");
+            }
+            else {
+                Log.d("Dialogo", "No  . ");
+            }
+        }
+    };
+
+    DialogInterface.OnMultiChoiceClickListener optionsL = new DialogInterface.OnMultiChoiceClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+            Log.d("Dialogo", which + "" + isChecked);
+        }
+    };
 
     @Override
     public void onRequestPermissionsResult(int responseCode, @NonNull String[] permissionNames, @NonNull int[] permissionResults) {
@@ -143,6 +178,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Seleccione foto"), selectPhotoCode);
+    }
+
+    public void Settings(View view) {
+        builder.show();
     }
 
     public void processPhoto(final Bitmap photoToProcess) {
@@ -272,6 +311,7 @@ public class MainActivity extends AppCompatActivity {
         bundle.putDoubleArray("Sad", sad);
         bundle.putDoubleArray("Neutral", neutral);
         bundle.putDoubleArray("Bald", bald);
+        bundle.putBooleanArray("Options", optionsB);
         Intent intent = new Intent(MainActivity.this, ResultsActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);

@@ -48,8 +48,12 @@ public class ResultsActivity extends Activity {
             /*Atributos*/
             attr.setText(attr.getText() + "\n-Edad: " + bundle.getDoubleArray("Ages")[i]);
             attr.setText(attr.getText() + "\n-Sexo: " + bundle.getStringArray("Genders")[i]);
-            attr.setText(attr.getText() + "\n-Sonrisa: " + bundle.getDoubleArray("Smiles")[i]*100 + "%");
-            attr.setText(attr.getText() + "\n-Barba: " + bundle.getDoubleArray("Beards")[i]*100 + "%");
+            if (bundle.getBooleanArray("Options")[0]) {
+                attr.setText(attr.getText() + "\n-Sonrisa: " + bundle.getDoubleArray("Smiles")[i] * 100 + "%");
+            }
+            if (bundle.getBooleanArray("Options")[1]) {
+                attr.setText(attr.getText() + "\n-Barba: " + bundle.getDoubleArray("Beards")[i] * 100 + "%");
+            }
             attr.setText(attr.getText() + "\n\n-----------------------------------------------\n");
         }
         ageAvg = Math.round(ageAvg/bundle.getDoubleArray("Ages").length);
