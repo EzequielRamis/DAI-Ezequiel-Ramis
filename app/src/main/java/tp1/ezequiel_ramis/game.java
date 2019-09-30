@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.cocos2d.actions.interval.MoveTo;
 import org.cocos2d.actions.interval.RotateTo;
+import org.cocos2d.actions.interval.ScaleBy;
 import org.cocos2d.actions.interval.ScaleTo;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.Animation;
@@ -53,10 +54,10 @@ public class game {
         public gameLayer() {
             Log.d("GameLayer", "Comienza el constructor");
             Log.d("GameLayer", "Agrego imagen");
-            setImage();
+            super.schedule("setImage", 3f);
         }
 
-        void setImage() {
+        void setImage(float time) {
             Log.d("SetImage", "Creo animacion y la agrego al sprite");
             Animation animation = new Animation("run", 1f);
             for (int i = 0; i <= 20; i++) {
@@ -65,8 +66,11 @@ public class game {
             _image = Sprite.sprite("image.gif");
             _image.addAnimation(animation);
             super.schedule("updateImage", .06f);
+            float posX = new Random().nextInt((int)(_size.getWidth() - _image.getWidth())) + _image.getWidth()/2;
+            float posY = new Random().nextInt((int)(_size.getHeight() - _image.getHeight())) + _image.getHeight()/2;
             Log.d("SetImage", "Posiciono imagen");
-            _image.setPosition(new Random().nextInt(), 0);
+            _image.setPosition(posX, posY);
+            _image.runAction(MoveTo.action(3f, getNearestX(posX), getNearestY(posY)));
             Log.d("SetImage", "Lo agrego a la capa");
             super.addChild(_image);
         }
@@ -77,20 +81,16 @@ public class game {
             imageFrame++;
         }
 
-        public int leftPos() {
-            return Math.round(_image.getWidth() / 2);
+        public float getNearestX(float posX) {
+            if (_size.getWidth() - posX > _size.getWidth()/2)
+                return _size.getWidth();
+            return 0;
         }
 
-        public int rightPos() {
-            return Math.round(_size.width - _image.getWidth() / 2);
-        }
-
-        public int upPos() {
-            return Math.round(_size.height - _image.getHeight()/2);
-        }
-
-        public int bottomPos() {
-            return Math.round( _image.getHeight()/2);
+        public float getNearestY(float posY) {
+            if (_size.getHeight() - posY > _size.getHeight()/2)
+                return _size.getHeight();
+            return 0;
         }
     }
 }
