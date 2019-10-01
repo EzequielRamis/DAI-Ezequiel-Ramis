@@ -14,15 +14,16 @@ import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.Sprite;
 import org.cocos2d.opengl.CCGLSurfaceView;
+import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCSize;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class game {
     CCGLSurfaceView _view;
     CCSize _size;
-    Sprite _image;
-    int imageFrame = 0;
+    Sprite[] _images = new Sprite[2];
 
     public game(CCGLSurfaceView view) {
         Log.d("Game", "Comienza el constructor de la clase");
@@ -53,35 +54,45 @@ public class game {
     class gameLayer extends Layer {
         public gameLayer() {
             Log.d("GameLayer", "Comienza el constructor");
-            Log.d("GameLayer", "Agrego imagen");
-            super.schedule("setImage", 3f);
+            Log.d("GameLayer", "Agrego imagenes");
+            //super.schedule("setImages", 1f);
+            setImages();
         }
 
-        void setImage(float time) {
-            Log.d("SetImage", "Creo animacion y la agrego al sprite");
-            Animation animation = new Animation("run", 1f);
-            for (int i = 0; i <= 20; i++) {
-                animation.addFrame("image/frame_" + i + ".jpg");
-            }
-            _image = Sprite.sprite("image.gif");
-            _image.addAnimation(animation);
-            super.schedule("updateImage", .06f);
-            float posX = new Random().nextInt((int)(_size.getWidth() - _image.getWidth())) + _image.getWidth()/2;
-            float posY = new Random().nextInt((int)(_size.getHeight() - _image.getHeight())) + _image.getHeight()/2;
-            Log.d("SetImage", "Posiciono imagen");
-            _image.setPosition(posX, posY);
-            _image.runAction(MoveTo.action(3f, getNearestX(posX), getNearestY(posY)));
-            Log.d("SetImage", "Lo agrego a la capa");
-            super.addChild(_image);
+        void setImages(/*float time*/) {
+            _images[0] = Sprite.sprite("manaos.jpg");
+            _images[1] = Sprite.sprite("alimento.jpg");
+            Log.d("SetImages", "Posiciono imagenes");
+            do {
+                setRandPosition(_images[0]);
+                setRandPosition(_images[1]);
+            } while (isIntersected(_images[0], _images[1]));
+            Log.d("SetImages", "Los agrego a la capa");
+            super.addChild(_images[0]);
+            super.addChild(_images[1]);
         }
 
-        public void updateImage(float time) {
-            _image.setDisplayFrame("run", imageFrame);
-            if (imageFrame == 20) imageFrame = -1;
-            imageFrame++;
+        public void setRandPosition(Sprite image) {
+            image.setPosition(
+                    new Random().nextInt((int)(_size.getWidth() - image.getWidth())) + image.getWidth()/2,
+                    new Random().nextInt((int)(_size.getHeight() - image.getHeight())) + image.getHeight()/2
+            );
         }
 
-        public float getNearestX(float posX) {
+        public boolean isIntersected(Sprite i0, Sprite i1) {
+            float left0, left1, right0, right1, top0, top1, bot0, bot1;
+            left0 = i0.getPositionX() - i0.getWidth()/2;
+            right0 = i0.getPositionX() + i0.getWidth()/2;
+            top0 = i0.getPositionY() + i0.getHeight()/2;
+            bot0 = i0.getPositionY() - i0.getHeight()/2;
+            left1 = i1.getPositionX() - i1.getWidth()/2;
+            right1 = i1.getPositionX() + i1.getWidth()/2;
+            top1 = i1.getPositionY() + i1.getHeight()/2;
+            bot1 = i1.getPositionY() - i1.getHeight()/2;
+            return !(left0 > right1 || right0 < left1 || top0 < bot1 || bot0 > top1);
+        }
+
+        /*public float getNearestX(float posX) {
             if (_size.getWidth() - posX > _size.getWidth()/2)
                 return _size.getWidth();
             return 0;
@@ -91,6 +102,6 @@ public class game {
             if (_size.getHeight() - posY > _size.getHeight()/2)
                 return _size.getHeight();
             return 0;
-        }
+        }*/
     }
 }
