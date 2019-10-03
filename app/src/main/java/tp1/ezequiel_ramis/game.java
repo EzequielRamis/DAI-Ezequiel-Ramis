@@ -2,6 +2,7 @@ package tp1.ezequiel_ramis;
 
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import org.cocos2d.actions.interval.MoveTo;
 import org.cocos2d.actions.interval.RotateTo;
@@ -24,6 +25,10 @@ public class game {
     CCGLSurfaceView _view;
     CCSize _size;
     Sprite[] _images = new Sprite[2];
+
+    boolean touching = false;
+    int imageTouched = -1;
+    float dx, dy;
 
     public game(CCGLSurfaceView view) {
         Log.d("Game", "Comienza el constructor de la clase");
@@ -57,6 +62,7 @@ public class game {
             Log.d("GameLayer", "Agrego imagenes");
             //super.schedule("setImages", 1f);
             setImages();
+            setIsTouchEnabled(true);
         }
 
         void setImages(/*float time*/) {
@@ -92,16 +98,61 @@ public class game {
             return !(left0 > right1 || right0 < left1 || top0 < bot1 || bot0 > top1);
         }
 
-        /*public float getNearestX(float posX) {
-            if (_size.getWidth() - posX > _size.getWidth()/2)
-                return _size.getWidth();
-            return 0;
+        public boolean isInside(Sprite i, float x, float y) {
+            return     (x < i.getPositionX() + i.getWidth()/2)
+                    && (x > i.getPositionX() - i.getWidth()/2)
+                    && (y < i.getPositionY() + i.getHeight()/2)
+                    && (y > i.getPositionY() - i.getHeight()/2);
         }
 
-        public float getNearestY(float posY) {
-            if (_size.getHeight() - posY > _size.getHeight()/2)
-                return _size.getHeight();
-            return 0;
-        }*/
+
+        void moveImage(Sprite i, float x, float y) {
+            i.setPosition(x, y);
+        }
+
+        @Override
+        public boolean ccTouchesBegan(MotionEvent event) {
+            float x, y;
+            x = event.getX();
+            y = _size.getHeight() - event.getY();
+            Log.d("Touch", "X: " + x + " Y: " + y);
+            for (int i = 0; i < _images.length; i++) {
+                if (isInside(_images[i], x, y)) {
+                    touching = true;
+                    imageTouched = i;
+                    dx = _images[i].getPositionX() - x;
+                    dy = _images[i].getPositionY() - y;
+                    break;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public boolean ccTouchesMoved(MotionEvent event) {
+            float x, y, xTo, yTo;
+            x = event.getX();
+            y = _size.getHeight() - event.getY();
+            Log.d("Touch", "X: " + x + " Y: " + y);
+            if (touching) {
+                //if (_images[imageTouched].getPositionX() + _images[imageTouched].getWidth()/2 >= _size.getWidth() ... ) Colision en las paredes
+                /*moveImage(_images[imageTouched],
+                          x + dx,
+                          y + dy); TO DO */
+            }
+            return true;
+        }
+
+        @Override
+        public boolean ccTouchesEnded(MotionEvent event) {
+            float x, y;
+            x = event.getX();
+            y = _size.getHeight() - event.getY();
+            Log.d("Touch", "X: " + x + " Y: " + y);
+            touching = false;
+            imageTouched = -1;
+            dx = dy = 0;
+            return true;
+        }
     }
 }
