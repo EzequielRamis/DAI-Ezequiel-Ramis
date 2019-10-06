@@ -29,6 +29,8 @@ public class game {
     boolean touching = false;
     int imageTouched = -1;
     float dx, dy;
+    float[] xTo, yTo;
+
 
     public game(CCGLSurfaceView view) {
         Log.d("Game", "Comienza el constructor de la clase");
@@ -36,6 +38,8 @@ public class game {
     }
 
     public void startGame() {
+        xTo = new float[2];
+        yTo = new float[2];
         Log.d("StartGame", "Comienza el juego");
         Director.sharedDirector().attachInView(_view);
         _size = Director.sharedDirector().displaySize();
@@ -62,6 +66,7 @@ public class game {
             Log.d("GameLayer", "Agrego imagenes");
             //super.schedule("setImages", 1f);
             setImages();
+            super.schedule("startCollision",  1/240);
             setIsTouchEnabled(true);
         }
 
@@ -70,44 +75,92 @@ public class game {
             _images[1] = Sprite.sprite("alimento.jpg");
             Log.d("SetImages", "Posiciono imagenes");
             do {
-                setRandPosition(_images[0]);
-                setRandPosition(_images[1]);
+                setRandPosition(_images[0], 0);
+                setRandPosition(_images[1], 1);
             } while (isIntersected(_images[0], _images[1]));
             Log.d("SetImages", "Los agrego a la capa");
             super.addChild(_images[0]);
             super.addChild(_images[1]);
         }
 
-        public void setRandPosition(Sprite image) {
-            image.setPosition(
-                    new Random().nextInt((int)(_size.getWidth() - image.getWidth())) + image.getWidth()/2,
-                    new Random().nextInt((int)(_size.getHeight() - image.getHeight())) + image.getHeight()/2
-            );
+        void setRandPosition(Sprite image, int i) {
+            xTo[i] = new Random().nextInt((int)(_size.getWidth() - image.getWidth())) + image.getWidth()/2;
+            yTo[i] = new Random().nextInt((int)(_size.getHeight() - image.getHeight())) + image.getHeight()/2;
+            image.setPosition(xTo[i], yTo[i]);
         }
 
-        public boolean isIntersected(Sprite i0, Sprite i1) {
-            float left0, left1, right0, right1, top0, top1, bot0, bot1;
-            left0 = i0.getPositionX() - i0.getWidth()/2;
-            right0 = i0.getPositionX() + i0.getWidth()/2;
-            top0 = i0.getPositionY() + i0.getHeight()/2;
-            bot0 = i0.getPositionY() - i0.getHeight()/2;
-            left1 = i1.getPositionX() - i1.getWidth()/2;
-            right1 = i1.getPositionX() + i1.getWidth()/2;
-            top1 = i1.getPositionY() + i1.getHeight()/2;
-            bot1 = i1.getPositionY() - i1.getHeight()/2;
-            return !(left0 > right1 || right0 < left1 || top0 < bot1 || bot0 > top1);
+        boolean isIntersected(Sprite i0, Sprite i1) {
+            return !(left(i0) > right(i1) ||
+                     right(i0) < left(i1) ||
+                     top(i0) < bot(i1) ||
+                     bot(i0) > top(i1));
         }
 
-        public boolean isInside(Sprite i, float x, float y) {
-            return     (x < i.getPositionX() + i.getWidth()/2)
-                    && (x > i.getPositionX() - i.getWidth()/2)
-                    && (y < i.getPositionY() + i.getHeight()/2)
-                    && (y > i.getPositionY() - i.getHeight()/2);
+        boolean isInside(Sprite i, float x, float y) {
+            return (x < right(i)) &&
+                   (x > left(i)) &&
+                   (y < top(i)) &&
+                   (y > bot(i));
         }
 
 
         void moveImage(Sprite i, float x, float y) {
             i.setPosition(x, y);
+        }
+
+        float left(Sprite sprite) {
+            return sprite.getPositionX() - sprite.getWidth()/2;
+        }
+
+        float right(Sprite sprite) {
+            return sprite.getPositionX() + sprite.getWidth()/2;
+        }
+
+        float top(Sprite sprite) {
+            return sprite.getPositionY() + sprite.getHeight()/2;
+        }
+
+        float bot(Sprite sprite) {
+            return sprite.getPositionY() - sprite.getHeight()/2;
+        }
+
+        float dist(float a, float b) {
+            if (a > b) return a - b;
+            else return b - a;
+        }
+
+        public void startCollision(float time) {
+            for (int i = 0; i < _images.length; i++) {
+                if (left(_images[i]) < 0)
+                    xTo[i] = _images[i].getWidth() / 2;
+
+                if (right(_images[i]) > _size.getWidth())
+                    xTo[i] = _size.getWidth() - _images[i].getWidth() / 2;
+
+                if (bot(_images[i]) < 0)
+                    yTo[i] = _images[i].getHeight() / 2;
+
+                if (top(_images[i]) > _size.getHeight())
+                    yTo[i] = _size.getHeight() - _images[i].getWidth() / 2;
+
+                if (isIntersected(_images[i], _images[i ^ 1])) {
+                    if (_images[i].getPositionY() > top(_images[i ^ 1]) || _images[i].getPositionY() < bot(_images[i ^ 1])) {
+                        if (top(_images[i]) > bot(_images[i ^ 1]) && bot(_images[i]) < bot(_images[i ^ 1]))
+                            yTo[i ^ 1] += dist(top(_images[i]), bot(_images[i ^ 1]));
+                        if (bot(_images[i]) < top(_images[i ^ 1]) && top(_images[i]) > top(_images[i ^ 1]))
+                            yTo[i ^ 1] -= dist(bot(_images[i]), top(_images[i ^ 1]));
+                    }
+                    if (!(_images[i].getPositionY() > top(_images[i ^ 1]) || _images[i].getPositionY() < bot(_images[i ^ 1]))) {
+                        if (right(_images[i]) > left(_images[i ^ 1]) && left(_images[i]) < left(_images[i ^ 1]))
+                            xTo[i ^ 1] += dist(right(_images[i]), left(_images[i ^ 1]));
+                        if (left(_images[i]) < right(_images[i ^ 1]) && right(_images[i]) > right(_images[i ^ 1]))
+                            xTo[i ^ 1] -= dist(left(_images[i]), right(_images[i ^ 1]));
+                    }
+                }
+
+                moveImage(_images[i], xTo[i], yTo[i]);
+
+            }
         }
 
         @Override
@@ -130,25 +183,24 @@ public class game {
 
         @Override
         public boolean ccTouchesMoved(MotionEvent event) {
-            float x, y, xTo, yTo;
+            float x, y;
             x = event.getX();
             y = _size.getHeight() - event.getY();
             Log.d("Touch", "X: " + x + " Y: " + y);
-            if (touching) {
-                //if (_images[imageTouched].getPositionX() + _images[imageTouched].getWidth()/2 >= _size.getWidth() ... ) Colision en las paredes
-                /*moveImage(_images[imageTouched],
-                          x + dx,
-                          y + dy); TO DO */
+            for (int i = 0; i < _images.length; i++) {
+                if (touching && i == imageTouched) {
+                    xTo[i] = x + dx;
+                    yTo[i] = y + dy;
+                    moveImage(_images[i],
+                            xTo[i],
+                            yTo[i]);
+                }
             }
             return true;
         }
 
         @Override
         public boolean ccTouchesEnded(MotionEvent event) {
-            float x, y;
-            x = event.getX();
-            y = _size.getHeight() - event.getY();
-            Log.d("Touch", "X: " + x + " Y: " + y);
             touching = false;
             imageTouched = -1;
             dx = dy = 0;
