@@ -24,12 +24,12 @@ import java.util.Random;
 public class game {
     CCGLSurfaceView _view;
     CCSize _size;
-    Sprite[] _images = new Sprite[2];
+    //Sprite[] _images = new Sprite[12];
 
-    boolean touching = false;
+    /*boolean touching = false;
     int imageTouched = -1;
     float dx, dy;
-    float[] xTo, yTo;
+    float[] xTo, yTo;*/
 
 
     public game(CCGLSurfaceView view) {
@@ -38,8 +38,8 @@ public class game {
     }
 
     public void startGame() {
-        xTo = new float[2];
-        yTo = new float[2];
+        /*xTo = new float[2];
+        yTo = new float[2];*/
         Log.d("StartGame", "Comienza el juego");
         Director.sharedDirector().attachInView(_view);
         _size = Director.sharedDirector().displaySize();
@@ -65,28 +65,21 @@ public class game {
             Log.d("GameLayer", "Comienza el constructor");
             Log.d("GameLayer", "Agrego imagenes");
             //super.schedule("setImages", 1f);
-            setImages();
+            setSprites();
             super.schedule("startCollision",  1/240);
             setIsTouchEnabled(true);
         }
 
-        void setImages(/*float time*/) {
-            _images[0] = Sprite.sprite("manaos.jpg");
-            _images[1] = Sprite.sprite("alimento.jpg");
-            Log.d("SetImages", "Posiciono imagenes");
+        void setSprites() {
+            /*for (int i = 0; i < 12; i++) {
+                _images[i] = Sprite.sprite("PNG/SPRITE_" + i + ".png");
+                super.addChild(_images[i]);
+            }*/
+            /*Log.d("SetImages", "Posiciono imagenes");
             do {
                 setRandPosition(_images[0], 0);
                 setRandPosition(_images[1], 1);
-            } while (isIntersected(_images[0], _images[1]));
-            Log.d("SetImages", "Los agrego a la capa");
-            super.addChild(_images[0]);
-            super.addChild(_images[1]);
-        }
-
-        void setRandPosition(Sprite image, int i) {
-            xTo[i] = new Random().nextInt((int)(_size.getWidth() - image.getWidth())) + image.getWidth()/2;
-            yTo[i] = new Random().nextInt((int)(_size.getHeight() - image.getHeight())) + image.getHeight()/2;
-            image.setPosition(xTo[i], yTo[i]);
+            } while (isIntersected(_images[0], _images[1]));*/
         }
 
         boolean isIntersected(Sprite i0, Sprite i1) {
@@ -129,41 +122,7 @@ public class game {
             else return b - a;
         }
 
-        public void startCollision(float time) {
-            for (int i = 0; i < _images.length; i++) {
-                if (left(_images[i]) < 0)
-                    xTo[i] = _images[i].getWidth() / 2;
-
-                if (right(_images[i]) > _size.getWidth())
-                    xTo[i] = _size.getWidth() - _images[i].getWidth() / 2;
-
-                if (bot(_images[i]) < 0)
-                    yTo[i] = _images[i].getHeight() / 2;
-
-                if (top(_images[i]) > _size.getHeight())
-                    yTo[i] = _size.getHeight() - _images[i].getWidth() / 2;
-
-                if (isIntersected(_images[i], _images[i ^ 1])) {
-                    if (_images[i].getPositionY() > top(_images[i ^ 1]) || _images[i].getPositionY() < bot(_images[i ^ 1])) {
-                        if (top(_images[i]) > bot(_images[i ^ 1]) && bot(_images[i]) < bot(_images[i ^ 1]))
-                            yTo[i ^ 1] += dist(top(_images[i]), bot(_images[i ^ 1]));
-                        if (bot(_images[i]) < top(_images[i ^ 1]) && top(_images[i]) > top(_images[i ^ 1]))
-                            yTo[i ^ 1] -= dist(bot(_images[i]), top(_images[i ^ 1]));
-                    }
-                    if (!(_images[i].getPositionY() > top(_images[i ^ 1]) || _images[i].getPositionY() < bot(_images[i ^ 1]))) {
-                        if (right(_images[i]) > left(_images[i ^ 1]) && left(_images[i]) < left(_images[i ^ 1]))
-                            xTo[i ^ 1] += dist(right(_images[i]), left(_images[i ^ 1]));
-                        if (left(_images[i]) < right(_images[i ^ 1]) && right(_images[i]) > right(_images[i ^ 1]))
-                            xTo[i ^ 1] -= dist(left(_images[i]), right(_images[i ^ 1]));
-                    }
-                }
-
-                moveImage(_images[i], xTo[i], yTo[i]);
-
-            }
-        }
-
-        @Override
+        /*@Override
         public boolean ccTouchesBegan(MotionEvent event) {
             float x, y;
             x = event.getX();
@@ -205,6 +164,6 @@ public class game {
             imageTouched = -1;
             dx = dy = 0;
             return true;
-        }
+        }*/
     }
 }
