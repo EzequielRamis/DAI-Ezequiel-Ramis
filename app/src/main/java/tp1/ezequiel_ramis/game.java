@@ -12,9 +12,12 @@ import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.Animation;
 import org.cocos2d.nodes.CocosNode;
 import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.Label;
+import org.cocos2d.nodes.LabelAtlas;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.Sprite;
 import org.cocos2d.opengl.CCGLSurfaceView;
+import org.cocos2d.types.CCColor3B;
 import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCSize;
 
@@ -80,6 +83,11 @@ public class game {
                 setRandPosition(_images[0], 0);
                 setRandPosition(_images[1], 1);
             } while (isIntersected(_images[0], _images[1]));*/
+            Label label = Label.label("Hello world", "assets/impact.ttf", 300);
+            label.setColor(new CCColor3B(255,255,255));
+            label.setPosition(100, 100);
+            Log.d("Label-width", ""+label.getWidth());
+            super.addChild(label);
         }
 
         boolean isIntersected(Sprite i0, Sprite i1) {
