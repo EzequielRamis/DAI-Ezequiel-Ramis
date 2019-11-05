@@ -1,38 +1,40 @@
 package tp1.ezequiel_ramis;
 
-import android.support.design.widget.Snackbar;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
+import android.icu.text.AlphabeticIndex;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
-import android.view.MotionEvent;
+import android.widget.ArrayAdapter;
 
-import org.cocos2d.actions.interval.MoveTo;
-import org.cocos2d.actions.interval.RotateTo;
-import org.cocos2d.actions.interval.ScaleBy;
-import org.cocos2d.actions.interval.ScaleTo;
 import org.cocos2d.layers.Layer;
-import org.cocos2d.nodes.Animation;
-import org.cocos2d.nodes.CocosNode;
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Label;
-import org.cocos2d.nodes.LabelAtlas;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.Sprite;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CCColor3B;
 import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CCTexParams;
+import org.cocos2d.utils.CCFormatter;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Locale;
 
 public class game {
     CCGLSurfaceView _view;
     CCSize _size;
+    ArrayList<tile> tiles;
     //Sprite[] _images = new Sprite[12];
 
     /*boolean touching = false;
     int imageTouched = -1;
     float dx, dy;
     float[] xTo, yTo;*/
+
+    /*VELOCIDAD*/
+    // [2/(1+e^.01x)]+.5
 
 
     public game(CCGLSurfaceView view) {
@@ -68,12 +70,12 @@ public class game {
             Log.d("GameLayer", "Comienza el constructor");
             Log.d("GameLayer", "Agrego imagenes");
             //super.schedule("setImages", 1f);
-            setSprites();
-            super.schedule("startCollision",  1/240);
+            setTiles();
+            super.schedule("moveTiles",  1/60);
             setIsTouchEnabled(true);
         }
 
-        void setSprites() {
+        void setTiles() {
             /*for (int i = 0; i < 12; i++) {
                 _images[i] = Sprite.sprite("PNG/SPRITE_" + i + ".png");
                 super.addChild(_images[i]);
@@ -83,11 +85,19 @@ public class game {
                 setRandPosition(_images[0], 0);
                 setRandPosition(_images[1], 1);
             } while (isIntersected(_images[0], _images[1]));*/
-            Label label = Label.label("Hello world", "assets/impact.ttf", 300);
-            label.setColor(new CCColor3B(255,255,255));
-            label.setPosition(100, 100);
-            Log.d("Label-width", ""+label.getWidth());
-            super.addChild(label);
+            tiles = new ArrayList<tile>();
+            for(int i = 0; i < 10; i++) {
+                tiles.add(new tile("CALOR", CCPoint.ccp(500, i), true, 1.0));
+                super.addChild(tiles.get(i).getLabel(0));
+            }
+
+            //super.addChild(tile);
+        }
+
+        void moveTiles(float time) {
+            for(tile tile:tiles) {
+                tile.moveX();
+            }
         }
 
         boolean isIntersected(Sprite i0, Sprite i1) {
