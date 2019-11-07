@@ -21,11 +21,26 @@ import org.cocos2d.utils.CCFormatter;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Random;
 
 public class game {
     CCGLSurfaceView _view;
     CCSize _size;
-    ArrayList<tile> tiles;
+    ArrayList<tile> tiles = new ArrayList<tile>();
+    boolean left = new Random().nextBoolean();
+    int lastTile = 0;
+    String[] tilesText = {
+            "JAVA",
+            "FRIO",
+            "CALOR",
+            "SUEÑO",
+            "ESTRES",
+            "PRUEBAS",
+            "INFLACIÓN",
+            "ELECCIONES",
+            "NO COMPILA",
+            "ANDROID STUDIO",
+    };
     //Sprite[] _images = new Sprite[12];
 
     /*boolean touching = false;
@@ -70,28 +85,25 @@ public class game {
             Log.d("GameLayer", "Comienza el constructor");
             Log.d("GameLayer", "Agrego imagenes");
             //super.schedule("setImages", 1f);
-            setTiles();
+            super.schedule("setTiles", 1/60);
             super.schedule("moveTiles",  1/60);
             setIsTouchEnabled(true);
         }
 
-        void setTiles() {
-            /*for (int i = 0; i < 12; i++) {
-                _images[i] = Sprite.sprite("PNG/SPRITE_" + i + ".png");
-                super.addChild(_images[i]);
-            }*/
-            /*Log.d("SetImages", "Posiciono imagenes");
-            do {
-                setRandPosition(_images[0], 0);
-                setRandPosition(_images[1], 1);
-            } while (isIntersected(_images[0], _images[1]));*/
-            tiles = new ArrayList<tile>();
-            for(int i = 0; i < 10; i++) {
-                tiles.add(new tile("CALOR", CCPoint.ccp(500, i), true, 1.0));
-                super.addChild(tiles.get(i).getLabel(0));
-            }
-
-            //super.addChild(tile);
+        void setTiles(float time) {
+            if (lastTile*100 < _size.getHeight()) {
+                int textIndex = new Random().nextInt(tilesText.length);
+                left = left ? false : true;
+                float position = left ? 0 : _size.getWidth();
+                tiles.add(new tile(tilesText[textIndex], CCPoint.ccp(position, lastTile+3), left, 1.0));
+                String text = tiles.get(lastTile).getText();
+                Log.d("Tile", ""+text/*tiles.get(lastTile).getText()*/);
+                for (Label label:tiles.get(lastTile).getLabels()) {
+                
+                }
+                super.addChild(tiles.get(lastTile).getLabel(0));
+                lastTile ++;
+            } else super.unschedule("setTiles");
         }
 
         void moveTiles(float time) {

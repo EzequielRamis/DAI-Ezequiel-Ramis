@@ -14,10 +14,10 @@ public class tile {
     private double _velocity;
     private double _repeat;
     private CCPoint _ccPoint;
-    private int _VEL = 20;
+    private static final int _VEL = 15;
 
     public tile(String text, CCPoint ccPoint, boolean left, double repeat) {
-        _labels = new ArrayList<>();
+        _labels = new ArrayList<Label>();
         _labels.add(Label.label(text, "", 85));
         _text = text;
         _ccPoint = ccPoint;
@@ -30,6 +30,26 @@ public class tile {
 
     public Label getLabel(int i) {
         return _labels.get(i);
+    }
+
+    public ArrayList<Label> getLabels() {
+        return _labels;
+    }
+
+    public void addLabel() {
+        _labels.add(Label.label(_text, "", 85));
+    }
+
+    public void deleteLabel(int i) {
+        _labels.remove(i);
+    }
+
+    public String getText() {
+        return _text;
+    }
+
+    public double getRepeat() {
+        return _repeat;
     }
 
     private Double sigmoid(float w) {
