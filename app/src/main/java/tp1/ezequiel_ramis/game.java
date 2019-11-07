@@ -91,19 +91,16 @@ public class game {
         }
 
         void setTiles(float time) {
-            if (lastTile*100 < _size.getHeight()) {
+            if (lastTile*100 <= _size.getHeight()) {
                 int textIndex = new Random().nextInt(tilesText.length);
                 left = left ? false : true;
                 float position = left ? 0 : _size.getWidth();
                 tiles.add(new tile(tilesText[textIndex], CCPoint.ccp(position, lastTile+3), left, 1.0));
                 String text = tiles.get(lastTile).getText();
                 Log.d("Tile", ""+text/*tiles.get(lastTile).getText()*/);
-                for (Label label:tiles.get(lastTile).getLabels()) {
-                
-                }
                 super.addChild(tiles.get(lastTile).getLabel(0));
                 lastTile ++;
-            } else super.unschedule("setTiles");
+            }
         }
 
         void moveTiles(float time) {
