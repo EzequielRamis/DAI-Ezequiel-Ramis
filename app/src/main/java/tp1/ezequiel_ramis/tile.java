@@ -11,51 +11,45 @@ import org.cocos2d.types.CCSize;
 import java.util.ArrayList;
 
 public class tile {
-    private ArrayList<Label> _labels;
     private String _text;
-    private double _velocity;
     private double _repeat;
-    private ArrayList<CCPoint> _ccPoints;
+    private float _y;
     private int _VEL = 5;
     private CCSize _size;
     private CCPoint ORIGINALCCPOINT;
 
-    public tile(String text, CCPoint ccPoint, boolean left, CCSize size) {
-        _labels = new ArrayList<Label>();
-        _ccPoints = new ArrayList<CCPoint>();
-        _labels.add(Label.label(text, "", 85));
+    public tile(String text, float y, boolean left, CCSize size) {
+        _y = y;
         _text = text;
-        _ccPoints.add(ccPoint);
-        ORIGINALCCPOINT = ccPoint;
-        _velocity = left? _VEL*sigmoid(_labels.get(0).getWidth()) : -_VEL*sigmoid(_labels.get(0).getWidth());
         _size = size;
-        setColor();
+        //setColor();
     }
 
-    public void setRepeat(double repeat) {
+    /*public void setRepeat(double repeat) {
         _repeat = repeat;
-    }
+    }*/
 
-    public Label getLabel(int i) {
+    /*public Label getLabel(int i) {
         return _labels.get(i);
-    }
+    }*/
 
     public double getVelocity() {
         return _velocity;
     }
 
-    public ArrayList<Label> getLabels() {
+    /*public ArrayList<Label> getLabels() {
         return _labels;
-    }
+    }*/
 
-    public void addLabel() {
+    /*public Label addLabel() {
         _labels.add(Label.label(_text, "", 85));
         _ccPoints.add(ORIGINALCCPOINT);
-    }
+        return _labels.get(_labels.size()-1);
+    }*/
 
-    public void deleteLabel(int i) {
+    /*public void deleteLabel(int i) {
         _labels.remove(i);
-    }
+    }*/
 
     public String getText() {
         return _text;
@@ -81,30 +75,20 @@ public class tile {
         }
     }
 
-    public void setColor(){
+    /*public void setColor(){
         for (Label label:_labels) {
             label.setColor(new CCColor3B(255,255,255));
             Log.d("Size", ""+label.getHeight());
         }
-    }
+    }*/
 
-    public void move(Label label, int i){
-        /*delta[1] += _velocity;
-        setCCPointX(_velocity);
-        for (int i = 0; i < _labels.size(); i++) {
-            _labels.get(i).setPosition(_ccPoints.get(i).x, _ccPoints.get(i).y*100);
-        }
-        updateTile();*/
+    /*public void move(Label label, int i){
         setCCPointX(_velocity);
         label.setPosition(_ccPoints.get(i).x, _ccPoints.get(i).y*100);
         removeLabel(i);
-    }
+    }*/
 
-    private void removeLabel(int i) {
-        /*if (Math.abs(delta[1]) > _repeat) {
-            _labels.add(Label.label(_text, "", 85));
-            delta[1] = 0;
-        }*/
+    /*private void removeLabel(int i) {
         if (_velocity < 0) {
             if (_labels.get(i).getPositionX() + _labels.get(i).getWidth()/2 < 0) {
                 _labels.remove(i);
@@ -115,7 +99,7 @@ public class tile {
             _labels.remove(i);
             Log.d("Tile", _labels.size()+"");
         }
-    }
+    }*/
 
     public boolean getXLimit(Label label) {
         if (_velocity > 0) {

@@ -86,7 +86,6 @@ public class game {
             Log.d("GameLayer", "Agrego imagenes");
             //super.schedule("setImages", 1f);
             super.schedule("setTiles", 1/60);
-            super.schedule("moveTiles",  1/60);
             setIsTouchEnabled(true);
         }
 
@@ -96,26 +95,26 @@ public class game {
                 left = left ? false : true;
                 float position = left ? 0 : _size.getWidth();
                 tiles.add(new tile(tilesText[textIndex], CCPoint.ccp(position, lastTile+3), left, _size));
-                tiles.get(lastTile).setRepeat(this.getWidth());
-                String text = tiles.get(lastTile).getText();
-                Log.d("Tile", ""+text/*tiles.get(lastTile).getText()*/);
-                super.addChild(tiles.get(lastTile).getLabel(0));
+                //super.addChild(tiles.get(lastTile).getLabel(0));
+                //super.schedule("setLabels",  1/60);
+                super.schedule("addLabel", repeat);
                 lastTile ++;
             }
         }
 
-        void moveTiles(float time) {
+        /*void moveLabels(float time) {
             for(tile tile:tiles) {
                 int i = 0;
                 if (tile.getXLimit(tile.getLabel(i))) {
-                    tile.addLabel();
+                    Label nextLabel = tile.addLabel();
+                    super.addChild(nextLabel);
                 }
                 for(Label label:tile.getLabels()){
                     tile.move(label, i);
                     i++;
                 }
             }
-        }
+        }*/
 
         boolean isIntersected(Sprite i0, Sprite i1) {
             return !(left(i0) > right(i1) ||
