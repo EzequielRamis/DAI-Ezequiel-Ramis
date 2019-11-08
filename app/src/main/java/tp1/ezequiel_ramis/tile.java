@@ -17,12 +17,18 @@ public class tile {
     private int _VEL = 5;
     private CCSize _size;
     private CCPoint ORIGINALCCPOINT;
+    private boolean _left;
 
     public tile(String text, float y, boolean left, CCSize size) {
         _y = y;
         _text = text;
         _size = size;
+        _left = left;
         //setColor();
+    }
+
+    public boolean getLeft() {
+        return _left;
     }
 
     /*public void setRepeat(double repeat) {
@@ -33,9 +39,9 @@ public class tile {
         return _labels.get(i);
     }*/
 
-    public double getVelocity() {
+    /*public double getVelocity() {
         return _velocity;
-    }
+    }*/
 
     /*public ArrayList<Label> getLabels() {
         return _labels;
@@ -63,17 +69,17 @@ public class tile {
         return 2/(1 + Math.pow(Math.E, .01*w)) + .5;
     }
 
-    private void setCCPointY(float y) {
+    /*private void setCCPointY(float y) {
         for (CCPoint point: _ccPoints) {
             point.y = y;
         }
-    }
+    }*/
 
-    private void setCCPointX(double x) {
+    /*private void setCCPointX(double x) {
         for (CCPoint point: _ccPoints) {
             point.x += x;
         }
-    }
+    }*/
 
     /*public void setColor(){
         for (Label label:_labels) {
@@ -101,7 +107,7 @@ public class tile {
         }
     }*/
 
-    public boolean getXLimit(Label label) {
+    /*public boolean getXLimit(Label label) {
         if (_velocity > 0) {
             if (label.getPositionX() - label.getWidth()/2 > 100) {
                 return true;
@@ -111,5 +117,5 @@ public class tile {
             return true;
         }
         return false;
-    }
+    }*/
 }

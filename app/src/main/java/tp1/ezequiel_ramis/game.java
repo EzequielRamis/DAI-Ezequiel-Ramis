@@ -94,11 +94,24 @@ public class game {
                 int textIndex = new Random().nextInt(tilesText.length);
                 left = left ? false : true;
                 float position = left ? 0 : _size.getWidth();
-                tiles.add(new tile(tilesText[textIndex], CCPoint.ccp(position, lastTile+3), left, _size));
+                tiles.add(new tile(tilesText[textIndex], lastTile+3, left, _size));
                 //super.addChild(tiles.get(lastTile).getLabel(0));
                 //super.schedule("setLabels",  1/60);
-                super.schedule("addLabel", repeat);
+                super.schedule("addLabel", 3f);
                 lastTile ++;
+            }
+        }
+
+        void addLabel(float time) {
+            gameLabel label = new gameLabel(
+                    tiles.get(lastTile).getText(),
+                    tiles.get(lastTile).getLeft(),
+                    _size,
+                    5
+            );
+            super.addChild(label.getLabel());
+            while (true) {
+                label.move(lastTile*3);
             }
         }
 
