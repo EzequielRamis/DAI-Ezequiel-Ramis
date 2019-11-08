@@ -9,23 +9,24 @@ public class gameLabel {
     private float _x;
     private double _velocity;
 
-    public gameLabel(String text, boolean left, CCSize size, int VEL) {
+    public gameLabel(String text, CCSize size, float velocity) {
         _label = Label.label(text, "", 85);
         _label.setColor(new CCColor3B(255,255,255));
         //_velocity = (float) velocity;
-        _velocity = left? VEL*sigmoid(_label.getWidth()) : -VEL*sigmoid(_label.getWidth());
-        _x = _velocity < 0 ? size.getWidth() + _label.getWidth()/2 : -_label.getWidth()/2;
+        _velocity = velocity;
+        _x = /*_velocity < 0 ? size.getWidth() + _label.getWidth()/2 : -_label.getWidth()/2*/size.getWidth()/2;
     }
 
     public void move(float y) {
-        _label.setPosition(_x + (float)_velocity, y);
+        _x += (float) _velocity;
+        _label.setPosition(_x, y);
     }
 
     public Label getLabel() {
         return _label;
     }
 
-    private double sigmoid(float w) {
-        return 2 / (1 + Math.pow(Math.E, .01 * w)) + .5;
+    public void set_velocity(float velocity) {
+        _velocity = velocity;
     }
 }

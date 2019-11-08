@@ -22,13 +22,15 @@ import org.cocos2d.utils.CCFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class game {
     CCGLSurfaceView _view;
     CCSize _size;
     ArrayList<tile> tiles = new ArrayList<tile>();
     boolean left = new Random().nextBoolean();
-    int lastTile = 0;
+    int indexLastTile = 0;
     String[] tilesText = {
             "JAVA",
             "FRIO",
@@ -41,6 +43,10 @@ public class game {
             "NO COMPILA",
             "ANDROID STUDIO",
     };
+    int VEL = 10;
+
+    ArrayList<ArrayList<gameLabel>> gridLabels;
+
     //Sprite[] _images = new Sprite[12];
 
     /*boolean touching = false;
@@ -86,46 +92,72 @@ public class game {
             Log.d("GameLayer", "Agrego imagenes");
             //super.schedule("setImages", 1f);
             super.schedule("setTiles", 1/60);
+            //super.schedule("addLabel", 3f);
+            //super.schedule("moveLabels", 1/60);
             setIsTouchEnabled(true);
         }
 
         void setTiles(float time) {
-            if (lastTile*100 <= _size.getHeight()) {
+            if (indexLastTile*100 <= _size.getHeight()) {
                 int textIndex = new Random().nextInt(tilesText.length);
                 left = left ? false : true;
+                double velocity;
                 float position = left ? 0 : _size.getWidth();
-                tiles.add(new tile(tilesText[textIndex], lastTile+3, left, _size));
+                gridLabels.get(indexLastTile).add(new gameLabel(tilesText[textIndex], _size, 0));
+                if (left) {
+                    velocity =  VEL*sigmoid(gridLabels.get(indexLastTile).get(0).getLabel().getWidth());
+                } else {
+                    velocity =  -VEL*sigmoid(gridLabels.get(indexLastTile).get(0).getLabel().getWidth());
+                }
+
+                indexLastTile ++;
+            }
+        }
+
+        /*void setTiles(float time) {
+            if (indexLastTile*100 <= _size.getHeight()) {
+                int textIndex = new Random().nextInt(tilesText.length);
+                left = left ? false : true;
+                double velocity;
+                float position = left ? 0 : _size.getWidth();
+                tiles.add(new tile(tilesText[textIndex], indexLastTile + 3, _size, super.getParent()));
+                if (left) {
+                    velocity =  VEL*sigmoid(tiles.get(indexLastTile).getGameLabelAtrr().getLabel().getWidth());
+                } else {
+                    velocity =  -VEL*sigmoid(tiles.get(indexLastTile).getGameLabelAtrr().getLabel().getWidth());
+                }
+                tiles.get(indexLastTile).set_velocity((float) velocity);
+                tiles.get(indexLastTile).addGameLabels(Math.abs(velocity));
+                for (gameLabel label: tiles.get(indexLastTile).getGameLabels()) {
+                    super.addChild(label.getLabel());
+                }
                 //super.addChild(tiles.get(lastTile).getLabel(0));
                 //super.schedule("setLabels",  1/60);
-                super.schedule("addLabel", 3f);
-                lastTile ++;
+                //super.schedule("addLabel", 0.1f);
+                indexLastTile ++;
             }
+        }*/
+
+        Double sigmoid(float w) {
+            return 2/(1 + Math.pow(Math.E, .01*w)) + .5;
         }
 
-        void addLabel(float time) {
-            gameLabel label = new gameLabel(
-                    tiles.get(lastTile).getText(),
-                    tiles.get(lastTile).getLeft(),
+        /*void addLabel(float time) {
+            gameLabels.add(new gameLabel(
+                    "Hello world",
+                    true,
                     _size,
-                    5
-            );
-            super.addChild(label.getLabel());
-            while (true) {
-                label.move(lastTile*3);
-            }
+                    10
+            ));
+            gameLabel lastLabel = gameLabels.get(indexLastLabel);
+            super.addChild(lastLabel.getLabel());
+            Log.d("Position", lastLabel.getLabel().getPositionX() + " " + lastLabel.getLabel().getPositionY());
+            indexLastLabel++;
         }
 
-        /*void moveLabels(float time) {
-            for(tile tile:tiles) {
-                int i = 0;
-                if (tile.getXLimit(tile.getLabel(i))) {
-                    Label nextLabel = tile.addLabel();
-                    super.addChild(nextLabel);
-                }
-                for(Label label:tile.getLabels()){
-                    tile.move(label, i);
-                    i++;
-                }
+        void moveLabels(float time) {
+            for(gameLabel label:gameLabels) {
+                label.move(500);
             }
         }*/
 
