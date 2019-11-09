@@ -60,7 +60,7 @@ public class tile {
             @Override
             public void run() {
                 for (gameLabel label: _gameLabels) {
-                    label.move(500);
+                    label.moveToX(500f);
                 }
             }
         };

@@ -5,13 +5,15 @@ import android.graphics.Typeface;
 import android.icu.text.AlphabeticIndex;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.ArrayAdapter;
 
+import org.cocos2d.actions.interval.MoveBy;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Label;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.nodes.Sprite;
+import org.cocos2d.nodes.Label;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CCColor3B;
 import org.cocos2d.types.CCPoint;
@@ -28,9 +30,7 @@ import java.util.TimerTask;
 public class game {
     CCGLSurfaceView _view;
     CCSize _size;
-    ArrayList<tile> tiles = new ArrayList<tile>();
     boolean left = new Random().nextBoolean();
-    int indexLastTile = 0;
     String[] tilesText = {
             "JAVA",
             "FRIO",
@@ -43,19 +43,12 @@ public class game {
             "NO COMPILA",
             "ANDROID STUDIO",
     };
-    int VEL = 10;
-
+    CCPoint VEL;
+    int indexLastTile = 0;
     ArrayList<ArrayList<gameLabel>> gridLabels;
 
-    //Sprite[] _images = new Sprite[12];
-
-    /*boolean touching = false;
-    int imageTouched = -1;
-    float dx, dy;
-    float[] xTo, yTo;*/
-
-    /*VELOCIDAD*/
-    // [2/(1+e^.01x)]+.5
+    Label player;
+    CCPoint touch;
 
 
     public game(CCGLSurfaceView view) {
@@ -64,8 +57,6 @@ public class game {
     }
 
     public void startGame() {
-        /*xTo = new float[2];
-        yTo = new float[2];*/
         Log.d("StartGame", "Comienza el juego");
         Director.sharedDirector().attachInView(_view);
         _size = Director.sharedDirector().displaySize();
@@ -88,161 +79,146 @@ public class game {
 
     class gameLayer extends Layer {
         public gameLayer() {
-            Log.d("GameLayer", "Comienza el constructor");
-            Log.d("GameLayer", "Agrego imagenes");
-            //super.schedule("setImages", 1f);
-            super.schedule("setTiles", 1/60);
-            //super.schedule("addLabel", 3f);
-            //super.schedule("moveLabels", 1/60);
+            VEL = new CCPoint();
+            touch = new CCPoint();
+            VEL.x = 5;
+            setPlayer();
+            //super.schedule("setLabel", VEL.x);
             setIsTouchEnabled(true);
         }
 
-        void setTiles(float time) {
-            if (indexLastTile*100 <= _size.getHeight()) {
-                int textIndex = new Random().nextInt(tilesText.length);
-                left = left ? false : true;
-                double velocity;
-                float position = left ? 0 : _size.getWidth();
-                gridLabels.get(indexLastTile).add(new gameLabel(tilesText[textIndex], _size, 0));
-                if (left) {
-                    velocity =  VEL*sigmoid(gridLabels.get(indexLastTile).get(0).getLabel().getWidth());
-                } else {
-                    velocity =  -VEL*sigmoid(gridLabels.get(indexLastTile).get(0).getLabel().getWidth());
-                }
+        public void setPlayer(){
+            player = Label.label("YO", "", 85);
+            player.setColor(new CCColor3B(255,255,255));
+            player.setPosition(_size.getWidth()/2, 100);
+            super.addChild(player);
+        }
 
-                indexLastTile ++;
+        /*public void setLabel(float time) {
+            gameLabel label = new gameLabel(tilesText[0], _size, 0);
+            if (left) {
+                label.set_velocity(VEL.x*sigmoid(label.getLabel().getWidth()));
+                label.moveToLeft();
             }
-        }
-
-        /*void setTiles(float time) {
-            if (indexLastTile*100 <= _size.getHeight()) {
-                int textIndex = new Random().nextInt(tilesText.length);
-                left = left ? false : true;
-                double velocity;
-                float position = left ? 0 : _size.getWidth();
-                tiles.add(new tile(tilesText[textIndex], indexLastTile + 3, _size, super.getParent()));
-                if (left) {
-                    velocity =  VEL*sigmoid(tiles.get(indexLastTile).getGameLabelAtrr().getLabel().getWidth());
-                } else {
-                    velocity =  -VEL*sigmoid(tiles.get(indexLastTile).getGameLabelAtrr().getLabel().getWidth());
-                }
-                tiles.get(indexLastTile).set_velocity((float) velocity);
-                tiles.get(indexLastTile).addGameLabels(Math.abs(velocity));
-                for (gameLabel label: tiles.get(indexLastTile).getGameLabels()) {
-                    super.addChild(label.getLabel());
-                }
-                //super.addChild(tiles.get(lastTile).getLabel(0));
-                //super.schedule("setLabels",  1/60);
-                //super.schedule("addLabel", 0.1f);
-                indexLastTile ++;
+            else {
+                label.set_velocity(-VEL.x*sigmoid(label.getLabel().getWidth()));
+                label.moveToRight();
             }
-        }*/
-
-        Double sigmoid(float w) {
-            return 2/(1 + Math.pow(Math.E, .01*w)) + .5;
+            label.moveToY(500f);
+            super.addChild(label.getLabel());
+            moveLabel moveLabel = new moveLabel(label, label.velocity);
+            Log.d("Velocity", label.velocity+"");
+            new Timer().schedule(moveLabel, 0, 1000/60);
         }
 
-        /*void addLabel(float time) {
-            gameLabels.add(new gameLabel(
-                    "Hello world",
-                    true,
-                    _size,
-                    10
-            ));
-            gameLabel lastLabel = gameLabels.get(indexLastLabel);
-            super.addChild(lastLabel.getLabel());
-            Log.d("Position", lastLabel.getLabel().getPositionX() + " " + lastLabel.getLabel().getPositionY());
-            indexLastLabel++;
-        }
+        class moveLabel extends TimerTask {
+            double velocity;
+            gameLabel label;
 
-        void moveLabels(float time) {
-            for(gameLabel label:gameLabels) {
-                label.move(500);
+            public moveLabel(gameLabel label, double velocity) {
+                this.label = label;
+                this.velocity = velocity;
+            }
+
+            @Override
+            public void run(){
+                label.moveBy((float)velocity, 0);
+                Log.d("Label", label.point.x  + " " + label.point.y);
             }
         }*/
 
-        boolean isIntersected(Sprite i0, Sprite i1) {
-            return !(left(i0) > right(i1) ||
-                     right(i0) < left(i1) ||
-                     top(i0) < bot(i1) ||
-                     bot(i0) > top(i1));
+        float left(Label label) {
+            return label.getPositionX() - label.getWidth()/2;
         }
 
-        boolean isInside(Sprite i, float x, float y) {
-            return (x < right(i)) &&
-                   (x > left(i)) &&
-                   (y < top(i)) &&
-                   (y > bot(i));
+        float right(Label label) {
+            return label.getPositionX() + label.getWidth()/2;
         }
 
-
-        void moveImage(Sprite i, float x, float y) {
-            i.setPosition(x, y);
+        float top(Label label) {
+            return label.getPositionY() + label.getHeight()/2;
         }
 
-        float left(Sprite sprite) {
-            return sprite.getPositionX() - sprite.getWidth()/2;
+        float bot(Label label) {
+            return label.getPositionY() - label.getHeight()/2;
         }
 
-        float right(Sprite sprite) {
-            return sprite.getPositionX() + sprite.getWidth()/2;
-        }
-
-        float top(Sprite sprite) {
-            return sprite.getPositionY() + sprite.getHeight()/2;
-        }
-
-        float bot(Sprite sprite) {
-            return sprite.getPositionY() - sprite.getHeight()/2;
-        }
-
-        float dist(float a, float b) {
-            if (a > b) return a - b;
-            else return b - a;
-        }
-
-        /*@Override
+        @Override
         public boolean ccTouchesBegan(MotionEvent event) {
-            float x, y;
-            x = event.getX();
-            y = _size.getHeight() - event.getY();
-            Log.d("Touch", "X: " + x + " Y: " + y);
-            for (int i = 0; i < _images.length; i++) {
-                if (isInside(_images[i], x, y)) {
-                    touching = true;
-                    imageTouched = i;
-                    dx = _images[i].getPositionX() - x;
-                    dy = _images[i].getPositionY() - y;
-                    break;
-                }
-            }
+            touch.x = event.getX();
+            touch.y = event.getY();
             return true;
         }
 
         @Override
         public boolean ccTouchesMoved(MotionEvent event) {
-            float x, y;
-            x = event.getX();
-            y = _size.getHeight() - event.getY();
-            Log.d("Touch", "X: " + x + " Y: " + y);
-            for (int i = 0; i < _images.length; i++) {
-                if (touching && i == imageTouched) {
-                    xTo[i] = x + dx;
-                    yTo[i] = y + dy;
-                    moveImage(_images[i],
-                            xTo[i],
-                            yTo[i]);
-                }
-            }
             return true;
         }
 
         @Override
         public boolean ccTouchesEnded(MotionEvent event) {
-            touching = false;
-            imageTouched = -1;
-            dx = dy = 0;
+            float time = 0.1f;
+            if (Math.abs(touch.x - event.getX()) < 50 && Math.abs(touch.y - event.getY()) < 50){
+                player.runAction(MoveBy.action(time, 0, 100));
+            }
+            else {
+                Direction direction = getDirection(touch.x, touch.y, event.getX(), event.getY());
+                Log.d("Touch", direction.toString());
+                switch (direction) {
+                    case up:
+                        player.runAction(MoveBy.action(time, 0, 100));
+                        break;
+                    case down:
+                        player.runAction(MoveBy.action(time, 0, -100));
+                        break;
+                    case left:
+                        player.runAction(MoveBy.action(time, -player.getWidth(), 0));
+                        break;
+                    case right:
+                        player.runAction(MoveBy.action(time, player.getWidth(), 0));
+                }
+            }
             return true;
-        }*/
+        }
     }
+
+    Double sigmoid(float w) {
+        return 2/(1 + Math.pow(Math.E, .01*w)) + .5;
+    }
+
+    public Direction getDirection(float x1, float y1, float x2, float y2){
+        double angle = getAngle(x1, y1, x2, y2);
+        return Direction.fromAngle(angle);
+    }
+
+    public double getAngle(float x1, float y1, float x2, float y2) {
+
+        double rad = Math.atan2(y1-y2,x2-x1) + Math.PI;
+        return (rad*180/Math.PI + 180)%360;
+    }
+
+    public enum Direction{
+        up,
+        down,
+        left,
+        right;
+        public static Direction fromAngle(double angle){
+            if(inRange(angle, 45, 135)){
+                return Direction.up;
+            }
+            else if(inRange(angle, 0,45) || inRange(angle, 315, 360)){
+                return Direction.right;
+            }
+            else if(inRange(angle, 225, 315)){
+                return Direction.down;
+            }
+            else{
+                return Direction.left;
+            }
+        }
+        private static boolean inRange(double angle, float init, float end){
+            return (angle >= init) && (angle < end);
+        }
+    }
+
 }
