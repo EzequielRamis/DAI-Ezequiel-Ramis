@@ -45,10 +45,13 @@ public class game {
     };
     CCPoint VEL;
     int indexLastTile = 0;
-    ArrayList<ArrayList<gameLabel>> gridLabels;
+//    ArrayList<ArrayList<gameLabel>> gridLabels;
 
     Label player;
     CCPoint touch;
+    int repetitionVal = 20000;
+    boolean orientation = true;
+    //ArrayList<Label> enemiesTile;
 
 
     public game(CCGLSurfaceView view) {
@@ -82,65 +85,130 @@ public class game {
             VEL = new CCPoint();
             touch = new CCPoint();
             VEL.x = 5;
+            //enemiesTile = new ArrayList<>();
             setPlayer();
-            //super.schedule("setLabel", VEL.x);
+            super.schedule("setTiles", 1 / 60);
             setIsTouchEnabled(true);
         }
 
-        public void setPlayer(){
-            player = Label.label("YO", "", 85);
-            player.setColor(new CCColor3B(255,255,255));
-            player.setPosition(_size.getWidth()/2, 100);
-            super.addChild(player);
+        void setTiles(float time) {
+            if (indexLastTile * 100 <= _size.getHeight()) {
+                AddTile addTile = new AddTile((indexLastTile + 3) * 100);
+                addTile.run();
+                indexLastTile++;
+            }
         }
 
-        /*public void setLabel(float time) {
-            gameLabel label = new gameLabel(tilesText[0], _size, 0);
-            if (left) {
-                label.set_velocity(VEL.x*sigmoid(label.getLabel().getWidth()));
-                label.moveToLeft();
+        class AddTile extends TimerTask {
+            float y;
+
+            public AddTile(float y) {
+                this.y = y;
             }
-            else {
-                label.set_velocity(-VEL.x*sigmoid(label.getLabel().getWidth()));
-                label.moveToRight();
+
+            @Override
+            public void run() {
+                int indexText = new Random().nextInt(tilesText.length);
+                Label label = Label.label(tilesText[indexText], "", 85);
+                orientation = orientation? false:true;
+                Timer timer = new Timer();
+                SetEnemy setEnemy = new SetEnemy(y, tilesText[indexText], orientation);
+                timer.schedule(setEnemy, new Random().nextInt(5000), Math.round(label.getWidth() / _size.getWidth() * repetitionVal));
+                if (repetitionVal > 10000) repetitionVal-=200;
             }
-            label.moveToY(500f);
-            super.addChild(label.getLabel());
-            moveLabel moveLabel = new moveLabel(label, label.velocity);
-            Log.d("Velocity", label.velocity+"");
-            new Timer().schedule(moveLabel, 0, 1000/60);
+
+            @Override
+            public boolean cancel() {
+                return true;
+            }
         }
 
-        class moveLabel extends TimerTask {
-            double velocity;
-            gameLabel label;
+        class SetEnemy extends TimerTask {
+            float y;
+            String text;
+            boolean left;
 
-            public moveLabel(gameLabel label, double velocity) {
-                this.label = label;
+            public SetEnemy(float y, String text, boolean left) {
+                this.y = y;
+                this.text = text;
+                this.left = left;
+            }
+
+            @Override
+            public void run() {
+                setEnemy(y, text, left);
+            }
+
+            @Override
+            public boolean cancel() {
+                return true;
+            }
+        }
+
+        class MoveEnemy extends TimerTask {
+            Label enemy;
+            float velocity;
+
+            public MoveEnemy(Label enemy, float velocity) {
+                this.enemy = enemy;
                 this.velocity = velocity;
             }
 
             @Override
-            public void run(){
-                label.moveBy((float)velocity, 0);
-                Log.d("Label", label.point.x  + " " + label.point.y);
+            public void run() {
+                enemy.setPosition(enemy.getPositionX() + velocity, enemy.getPositionY());
+                if ((velocity > 0 && enemy.getPositionX()-enemy.getWidth()/2 > _size.getWidth())
+                ||  (velocity < 0 && enemy.getPositionX()+enemy.getWidth()/2 < 0)) {
+                    removeChild(enemy, true);
+                }
             }
-        }*/
+
+            @Override
+            public boolean cancel() {
+                return true;
+            }
+        }
+
+        public void setEnemy(float y, String text, boolean left) {
+            double velocity;
+            float x;
+            Label enemy = Label.label(text, "", 85);
+            x = left ? -enemy.getWidth() : _size.getWidth() + enemy.getWidth();
+            enemy.setColor(new CCColor3B(255, 255, 255));
+            enemy.setPosition(x, y);
+            if (left) {
+                velocity = VEL.x * sigmoid(enemy.getWidth());
+            } else {
+                velocity = -VEL.x * sigmoid(enemy.getWidth());
+            }
+            //enemiesTile.add(enemy);
+            super.addChild(enemy);
+            Timer timer = new Timer();
+            MoveEnemy moveEnemy = new MoveEnemy(enemy, (float) velocity);
+            timer.schedule(moveEnemy, 0, 1000 / 60);
+        }
+
+        public void setPlayer() {
+            player = Label.label("YO", "", 85);
+            player.setColor(new CCColor3B(255, 255, 255));
+            player.setPosition(_size.getWidth() / 2, 100);
+            super.addChild(player);
+        }
 
         float left(Label label) {
-            return label.getPositionX() - label.getWidth()/2;
+            return label.getPositionX() - label.getWidth() / 2;
         }
 
         float right(Label label) {
-            return label.getPositionX() + label.getWidth()/2;
+            return label.getPositionX() + label.getWidth() / 2;
         }
 
         float top(Label label) {
-            return label.getPositionY() + label.getHeight()/2;
+            return label.getPositionY() + label.getHeight() / 2;
         }
 
         float bot(Label label) {
-            return label.getPositionY() - label.getHeight()/2;
+            return label.getPositionY() - label.getHeight() / 2;
         }
 
         @Override
@@ -158,10 +226,9 @@ public class game {
         @Override
         public boolean ccTouchesEnded(MotionEvent event) {
             float time = 0.1f;
-            if (Math.abs(touch.x - event.getX()) < 50 && Math.abs(touch.y - event.getY()) < 50){
+            if (Math.abs(touch.x - event.getX()) < 50 && Math.abs(touch.y - event.getY()) < 50) {
                 player.runAction(MoveBy.action(time, 0, 100));
-            }
-            else {
+            } else {
                 Direction direction = getDirection(touch.x, touch.y, event.getX(), event.getY());
                 Log.d("Touch", direction.toString());
                 switch (direction) {
