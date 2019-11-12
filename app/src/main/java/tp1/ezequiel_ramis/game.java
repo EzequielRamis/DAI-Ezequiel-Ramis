@@ -51,8 +51,9 @@ public class game {
     CCPoint touch;
     int repetitionVal = 20000;
     boolean orientation = true;
-    //ArrayList<Label> enemiesTile;
 
+    //ArrayList<Label> enemiesTile;
+    int down = 0;
 
     public game(CCGLSurfaceView view) {
         Log.d("Game", "Comienza el constructor de la clase");
@@ -97,6 +98,7 @@ public class game {
                 addTile.run();
                 indexLastTile++;
             }
+            down++;
         }
 
         class AddTile extends TimerTask {
@@ -113,7 +115,7 @@ public class game {
                 orientation = orientation? false:true;
                 Timer timer = new Timer();
                 SetEnemy setEnemy = new SetEnemy(y, tilesText[indexText], orientation);
-                timer.schedule(setEnemy, new Random().nextInt(5000), Math.round(label.getWidth() / _size.getWidth() * repetitionVal));
+                timer.schedule(setEnemy, /*new Random().nextInt(5000)*/0, Math.round(label.getWidth() / _size.getWidth() * repetitionVal));
                 if (repetitionVal > 10000) repetitionVal-=200;
             }
 
@@ -136,7 +138,7 @@ public class game {
 
             @Override
             public void run() {
-                setEnemy(y, text, left);
+                setEnemy(y - down, text, left);
             }
 
             @Override
@@ -156,7 +158,7 @@ public class game {
 
             @Override
             public void run() {
-                enemy.setPosition(enemy.getPositionX() + velocity, enemy.getPositionY());
+                enemy.setPosition(enemy.getPositionX() + velocity, enemy.getPositionY() - 1);
                 if ((velocity > 0 && enemy.getPositionX()-enemy.getWidth()/2 > _size.getWidth())
                 ||  (velocity < 0 && enemy.getPositionX()+enemy.getWidth()/2 < 0)) {
                     removeChild(enemy, true);
