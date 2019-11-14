@@ -52,7 +52,7 @@ public class game {
     int repetitionVal = 20000;
     boolean orientation = true;
 
-    //ArrayList<Label> enemiesTile;
+    ArrayList<Label> entities;
     int down = 0;
 
     public game(CCGLSurfaceView view) {
@@ -86,9 +86,10 @@ public class game {
             VEL = new CCPoint();
             touch = new CCPoint();
             VEL.x = 5;
-            //enemiesTile = new ArrayList<>();
+            entities = new ArrayList<>();
             setPlayer();
             super.schedule("setTiles", 1 / 60);
+            super.schedule("moveCamera", 1 / 60);
             setIsTouchEnabled(true);
         }
 
@@ -98,7 +99,13 @@ public class game {
                 addTile.run();
                 indexLastTile++;
             }
-            down++;
+        }
+
+        void moveCamera(float time) {
+            for (Label entity:entities) {
+                entity.setPosition(entity.getPositionX(), entity.getPositionY()-2);
+            }
+            down += 2;
         }
 
         class AddTile extends TimerTask {
@@ -138,7 +145,7 @@ public class game {
 
             @Override
             public void run() {
-                setEnemy(y - down, text, left);
+                setEnemy(y /*- down*/, text, left);
             }
 
             @Override
@@ -158,7 +165,7 @@ public class game {
 
             @Override
             public void run() {
-                enemy.setPosition(enemy.getPositionX() + velocity, enemy.getPositionY() - 1);
+                enemy.setPosition(enemy.getPositionX() + velocity, enemy.getPositionY());
                 if ((velocity > 0 && enemy.getPositionX()-enemy.getWidth()/2 > _size.getWidth())
                 ||  (velocity < 0 && enemy.getPositionX()+enemy.getWidth()/2 < 0)) {
                     removeChild(enemy, true);
@@ -177,7 +184,7 @@ public class game {
             Label enemy = Label.label(text, "", 85);
             x = left ? -enemy.getWidth() : _size.getWidth() + enemy.getWidth();
             enemy.setColor(new CCColor3B(255, 255, 255));
-            enemy.setPosition(x, y);
+            enemy.setPosition(x, y - down);
             if (left) {
                 velocity = VEL.x * sigmoid(enemy.getWidth());
             } else {
@@ -185,6 +192,7 @@ public class game {
             }
             //enemiesTile.add(enemy);
             super.addChild(enemy);
+            entities.add(enemy);
             Timer timer = new Timer();
             MoveEnemy moveEnemy = new MoveEnemy(enemy, (float) velocity);
             timer.schedule(moveEnemy, 0, 1000 / 60);
@@ -195,6 +203,7 @@ public class game {
             player.setColor(new CCColor3B(255, 255, 255));
             player.setPosition(_size.getWidth() / 2, 100);
             super.addChild(player);
+            entities.add(player);
         }
 
         float left(Label label) {
@@ -227,7 +236,7 @@ public class game {
 
         @Override
         public boolean ccTouchesEnded(MotionEvent event) {
-            float time = 0.1f;
+            float time = 1/6f;
             if (Math.abs(touch.x - event.getX()) < 50 && Math.abs(touch.y - event.getY()) < 50) {
                 player.runAction(MoveBy.action(time, 0, 100));
             } else {
@@ -235,10 +244,10 @@ public class game {
                 Log.d("Touch", direction.toString());
                 switch (direction) {
                     case up:
-                        player.runAction(MoveBy.action(time, 0, 100));
+                        player.runAction(MoveBy.action(time, 0, 90 + 90*time/10));
                         break;
                     case down:
-                        player.runAction(MoveBy.action(time, 0, -100));
+                        player.runAction(MoveBy.action(time, 0, -90 - 90*time/10));
                         break;
                     case left:
                         player.runAction(MoveBy.action(time, -player.getWidth(), 0));
