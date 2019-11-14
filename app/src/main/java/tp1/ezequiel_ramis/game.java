@@ -41,16 +41,15 @@ public class game {
             "INFLACIÓN",
             "ELECCIONES",
             "NO COMPILA",
-            "ANDROID STUDIO",
     };
     CCPoint VEL;
     int indexLastTile = 0;
-//    ArrayList<ArrayList<gameLabel>> gridLabels;
 
     Label player;
-    CCPoint touch;
-    int repetitionVal = 20000;
+    int repetitionVal = 30000;
     boolean orientation = true;
+
+    CCPoint delta;
 
     ArrayList<Label> entities;
     int down = 0;
@@ -84,17 +83,17 @@ public class game {
     class gameLayer extends Layer {
         public gameLayer() {
             VEL = new CCPoint();
-            touch = new CCPoint();
-            VEL.x = 5;
+            VEL.x = 10;
             entities = new ArrayList<>();
+            delta = new CCPoint();
             setPlayer();
-            super.schedule("setTiles", 1 / 60);
-            super.schedule("moveCamera", 1 / 60);
+            super.schedule("setTiles", 1/30);
+            super.schedule("moveCamera", 1 / 30);
             setIsTouchEnabled(true);
         }
 
         void setTiles(float time) {
-            if (indexLastTile * 100 <= _size.getHeight()) {
+            if (indexLastTile * 100 <= _size.getHeight() + down) {
                 AddTile addTile = new AddTile((indexLastTile + 3) * 100);
                 addTile.run();
                 indexLastTile++;
@@ -102,10 +101,11 @@ public class game {
         }
 
         void moveCamera(float time) {
+            int vel = 3;
             for (Label entity:entities) {
-                entity.setPosition(entity.getPositionX(), entity.getPositionY()-2);
+                entity.setPosition(entity.getPositionX(), entity.getPositionY()-vel);
             }
-            down += 2;
+            down += vel;
         }
 
         class AddTile extends TimerTask {
@@ -119,11 +119,17 @@ public class game {
             public void run() {
                 int indexText = new Random().nextInt(tilesText.length);
                 Label label = Label.label(tilesText[indexText], "", 85);
-                orientation = orientation? false:true;
+                //orientation = orientation? false:true;
+                orientation = new Random().nextBoolean();
                 Timer timer = new Timer();
-                SetEnemy setEnemy = new SetEnemy(y, tilesText[indexText], orientation);
-                timer.schedule(setEnemy, /*new Random().nextInt(5000)*/0, Math.round(label.getWidth() / _size.getWidth() * repetitionVal));
-                if (repetitionVal > 10000) repetitionVal-=200;
+                SetEnemy setEnemy = new SetEnemy(y, tilesText[indexText], orientation, VEL.x);
+                timer.schedule(setEnemy, new Random().nextInt(5000), Math.round(label.getWidth() / _size.getWidth() * repetitionVal));
+                if (repetitionVal > 15000) {
+                    repetitionVal -= 400;
+                }
+                if (VEL.x < 40) {
+                    VEL.x += .2;
+                }
             }
 
             @Override
@@ -136,16 +142,18 @@ public class game {
             float y;
             String text;
             boolean left;
+            float velocity;
 
-            public SetEnemy(float y, String text, boolean left) {
+            public SetEnemy(float y, String text, boolean left, float velocity) {
                 this.y = y;
                 this.text = text;
                 this.left = left;
+                this.velocity = velocity;
             }
 
             @Override
             public void run() {
-                setEnemy(y /*- down*/, text, left);
+                setEnemy(y /*- down*/, text, left, velocity);
             }
 
             @Override
@@ -167,18 +175,21 @@ public class game {
             public void run() {
                 enemy.setPosition(enemy.getPositionX() + velocity, enemy.getPositionY());
                 if ((velocity > 0 && enemy.getPositionX()-enemy.getWidth()/2 > _size.getWidth())
-                ||  (velocity < 0 && enemy.getPositionX()+enemy.getWidth()/2 < 0)) {
-                    removeChild(enemy, true);
+                ||  (velocity < 0 && enemy.getPositionX()+enemy.getWidth()/2 < 0)
+                ||  (enemy.getPositionY() < - enemy.getHeight())) {
+                    super.cancel();
                 }
             }
 
             @Override
             public boolean cancel() {
+                removeChild(enemy, true);
+                entities.remove(enemy);
                 return true;
             }
         }
 
-        public void setEnemy(float y, String text, boolean left) {
+        public void setEnemy(float y, String text, boolean left, float velN) {
             double velocity;
             float x;
             Label enemy = Label.label(text, "", 85);
@@ -186,20 +197,20 @@ public class game {
             enemy.setColor(new CCColor3B(255, 255, 255));
             enemy.setPosition(x, y - down);
             if (left) {
-                velocity = VEL.x * sigmoid(enemy.getWidth());
+                velocity = velN * sigmoid(enemy.getWidth());
             } else {
-                velocity = -VEL.x * sigmoid(enemy.getWidth());
+                velocity = -velN * sigmoid(enemy.getWidth());
             }
             //enemiesTile.add(enemy);
             super.addChild(enemy);
             entities.add(enemy);
             Timer timer = new Timer();
             MoveEnemy moveEnemy = new MoveEnemy(enemy, (float) velocity);
-            timer.schedule(moveEnemy, 0, 1000 / 60);
+            timer.schedule(moveEnemy, 0, 1000 / 30);
         }
 
         public void setPlayer() {
-            player = Label.label("YO", "", 85);
+            player = Label.label("YO", "", 85*.75f);
             player.setColor(new CCColor3B(255, 255, 255));
             player.setPosition(_size.getWidth() / 2, 100);
             super.addChild(player);
@@ -224,38 +235,23 @@ public class game {
 
         @Override
         public boolean ccTouchesBegan(MotionEvent event) {
-            touch.x = event.getX();
-            touch.y = event.getY();
+            CCPoint goTo = CCPoint.ccp(event.getX(), _size.getHeight()-event.getY());
+            delta.x = player.getPositionX() - goTo.x;
+            delta.y = player.getPositionY() - goTo.y;
             return true;
         }
 
         @Override
         public boolean ccTouchesMoved(MotionEvent event) {
+            CCPoint goTo = CCPoint.ccp(event.getX(), _size.getHeight()-event.getY());
+            player.setPosition(goTo.x + delta.x, goTo.y + delta.y);
             return true;
         }
 
         @Override
         public boolean ccTouchesEnded(MotionEvent event) {
-            float time = 1/6f;
-            if (Math.abs(touch.x - event.getX()) < 50 && Math.abs(touch.y - event.getY()) < 50) {
-                player.runAction(MoveBy.action(time, 0, 100));
-            } else {
-                Direction direction = getDirection(touch.x, touch.y, event.getX(), event.getY());
-                Log.d("Touch", direction.toString());
-                switch (direction) {
-                    case up:
-                        player.runAction(MoveBy.action(time, 0, 90 + 90*time/10));
-                        break;
-                    case down:
-                        player.runAction(MoveBy.action(time, 0, -90 - 90*time/10));
-                        break;
-                    case left:
-                        player.runAction(MoveBy.action(time, -player.getWidth(), 0));
-                        break;
-                    case right:
-                        player.runAction(MoveBy.action(time, player.getWidth(), 0));
-                }
-            }
+            delta.x = 0;
+            delta.y = 0;
             return true;
         }
     }
@@ -264,18 +260,18 @@ public class game {
         return 2/(1 + Math.pow(Math.E, .01*w)) + .5;
     }
 
-    public Direction getDirection(float x1, float y1, float x2, float y2){
+    /*public Direction getDirection(float x1, float y1, float x2, float y2){
         double angle = getAngle(x1, y1, x2, y2);
         return Direction.fromAngle(angle);
-    }
+    }*/
 
-    public double getAngle(float x1, float y1, float x2, float y2) {
+    /*public double getAngle(float x1, float y1, float x2, float y2) {
 
         double rad = Math.atan2(y1-y2,x2-x1) + Math.PI;
         return (rad*180/Math.PI + 180)%360;
-    }
+    }*/
 
-    public enum Direction{
+    /*public enum Direction{
         up,
         down,
         left,
@@ -297,6 +293,6 @@ public class game {
         private static boolean inRange(double angle, float init, float end){
             return (angle >= init) && (angle < end);
         }
-    }
+    }*/
 
 }
