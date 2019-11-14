@@ -41,6 +41,8 @@ public class game {
             "INFLACIÓN",
             "ELECCIONES",
             "NO COMPILA",
+            "ANSIEDAD",
+            "ANDROID STUDIO"
     };
     CCPoint VEL;
     int indexLastTile = 0;
