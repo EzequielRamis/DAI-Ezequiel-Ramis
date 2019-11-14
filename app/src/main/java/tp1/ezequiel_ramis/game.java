@@ -39,7 +39,6 @@ public class game {
             "ESTRES",
             "PRUEBAS",
             "INFLACIÓN",
-            "ELECCIONES",
             "NO COMPILA",
             "ANSIEDAD",
             "ANDROID STUDIO"
@@ -48,12 +47,25 @@ public class game {
     int indexLastTile = 0;
 
     Label player;
-    int repetitionVal = 30000;
+    int repetitionI = 10000;
+    int repetitionF = 4000;
+    int repetitionTick = 50;
+
+    float velI = 20;
+    float velF = 40;
+    float velTick = .24f;
+
+    float cameraI = 1;
+    float cameraF = 4;
+    float cameraTick = .01f;
+
     boolean orientation = true;
 
     CCPoint delta;
 
-    ArrayList<Label> entities;
+    float labelHeight = 170*.75f;
+
+    ArrayList<Label> enemies;
     int down = 0;
 
     public game(CCGLSurfaceView view) {
@@ -85,29 +97,39 @@ public class game {
     class gameLayer extends Layer {
         public gameLayer() {
             VEL = new CCPoint();
-            VEL.x = 10;
-            entities = new ArrayList<>();
+            VEL.x = velI;
+            enemies = new ArrayList<>();
             delta = new CCPoint();
             setPlayer();
             super.schedule("setTiles", 1/30);
             super.schedule("moveCamera", 1 / 30);
+            super.schedule("startCollisions", 1/30);
             setIsTouchEnabled(true);
         }
 
         void setTiles(float time) {
             if (indexLastTile * 100 <= _size.getHeight() + down) {
-                AddTile addTile = new AddTile((indexLastTile + 3) * 100);
+                AddTile addTile = new AddTile((indexLastTile + 3) * labelHeight*1.25f);
                 addTile.run();
                 indexLastTile++;
             }
         }
 
         void moveCamera(float time) {
-            int vel = 3;
-            for (Label entity:entities) {
-                entity.setPosition(entity.getPositionX(), entity.getPositionY()-vel);
+            float vel = cameraI;
+            player.setPosition(player.getPositionX(), player.getPositionY()-vel);
+            for (Label e:enemies) {
+                e.setPosition(e.getPositionX(), e.getPositionY()-vel);
             }
             down += vel;
+        }
+
+        void startCollisions(float time) {
+            for (Label enemy:enemies) {
+                if (isIntersected(player, enemy)) {
+                    /*Perder*/
+                }
+            }
         }
 
         class AddTile extends TimerTask {
@@ -120,18 +142,23 @@ public class game {
             @Override
             public void run() {
                 int indexText = new Random().nextInt(tilesText.length);
-                Label label = Label.label(tilesText[indexText], "", 85);
+                Label label = Label.label(tilesText[indexText], "", labelHeight);
+                Log.d("Size", label.getHeight()+"");
                 //orientation = orientation? false:true;
                 orientation = new Random().nextBoolean();
                 Timer timer = new Timer();
                 SetEnemy setEnemy = new SetEnemy(y, tilesText[indexText], orientation, VEL.x);
-                timer.schedule(setEnemy, new Random().nextInt(5000), Math.round(label.getWidth() / _size.getWidth() * repetitionVal));
-                if (repetitionVal > 15000) {
-                    repetitionVal -= 400;
+                timer.schedule(setEnemy, new Random().nextInt(10000), Math.round(label.getWidth() / _size.getWidth() * repetitionI));
+                if (repetitionI > repetitionF) {
+                    repetitionI -= repetitionTick;
                 }
-                if (VEL.x < 40) {
-                    VEL.x += .2;
+                if (VEL.x < velF) {
+                    VEL.x += velTick;
                 }
+                if (cameraI < cameraF) {
+                    cameraI+= cameraTick;
+                }
+                Log.d("Avance", repetitionI + " " + VEL.x + " " + cameraI);
             }
 
             @Override
@@ -186,7 +213,7 @@ public class game {
             @Override
             public boolean cancel() {
                 removeChild(enemy, true);
-                entities.remove(enemy);
+                enemies.remove(enemy);
                 return true;
             }
         }
@@ -194,7 +221,7 @@ public class game {
         public void setEnemy(float y, String text, boolean left, float velN) {
             double velocity;
             float x;
-            Label enemy = Label.label(text, "", 85);
+            Label enemy = Label.label(text, "", labelHeight);
             x = left ? -enemy.getWidth() : _size.getWidth() + enemy.getWidth();
             enemy.setColor(new CCColor3B(255, 255, 255));
             enemy.setPosition(x, y - down);
@@ -205,18 +232,24 @@ public class game {
             }
             //enemiesTile.add(enemy);
             super.addChild(enemy);
-            entities.add(enemy);
+            enemies.add(enemy);
             Timer timer = new Timer();
             MoveEnemy moveEnemy = new MoveEnemy(enemy, (float) velocity);
             timer.schedule(moveEnemy, 0, 1000 / 30);
         }
 
         public void setPlayer() {
-            player = Label.label("YO", "", 85*.75f);
+            player = Label.label("YO", "", labelHeight*.75f);
             player.setColor(new CCColor3B(255, 255, 255));
             player.setPosition(_size.getWidth() / 2, 100);
             super.addChild(player);
-            entities.add(player);
+        }
+
+        boolean isIntersected(Label i0, Label i1) {
+            return !(left(i0) > right(i1) ||
+                    right(i0) < left(i1) ||
+                    top(i0) < bot(i1) ||
+                    bot(i0) > top(i1));
         }
 
         float left(Label label) {
