@@ -63,7 +63,7 @@ public class game {
             "YO",
             "JAVA DE VUELTA",
             "TAREA",
-            "TRABAJOS"
+            "TRABAJO"
     };
 
     float labelHeight = 170*.75f;
@@ -161,13 +161,12 @@ public class game {
 
         Label player;
         int repetitionI = 25000;
-        float tick = 1.0005f;
-
         float velI = 15;
+        float tick = 1.0005f;
 
         float cameraI = 3;
 
-        boolean orientation = true;
+        boolean orientation;
 
         CCPoint delta;
 
@@ -237,7 +236,6 @@ public class game {
             maxYlimit -= cameraI;
             VEL.y /= tick + .00025f;
             VEL.x *= tick;
-            Log.d("Children", super.getChildren().size()+"");
         }
 
         void startCollisions(float time) {
@@ -265,13 +263,15 @@ public class game {
 
             @Override
             public void run() {
-                int indexText = new Random().nextInt(tilesText.length);
-                Label label = Label.label(tilesText[indexText], "", labelHeight);
-                orientation = orientation? false:true;
-                //orientation = new Random().nextBoolean();     Se complica demasiado
-                Timer timer = new Timer();
-                SetEnemy setEnemy = new SetEnemy(y, tilesText[indexText], orientation, VEL.x);
-                timer.schedule(setEnemy, new Random().nextInt(10000), Math.round(label.getWidth() / _size.getWidth() * VEL.y));
+                if (new Random().nextInt(100) > 20) {
+                    int indexText = new Random().nextInt(tilesText.length);
+                    Label label = Label.label(tilesText[indexText], "", labelHeight);
+                    //orientation = orientation ? false : true;
+                    orientation = new Random().nextBoolean();     //Se complica demasiado
+                    Timer timer = new Timer();
+                    SetEnemy setEnemy = new SetEnemy(y, tilesText[indexText], orientation, VEL.x);
+                    timer.schedule(setEnemy, new Random().nextInt(10000), Math.round(label.getWidth() / _size.getWidth() * VEL.y));
+                }
                 Log.d("Dificultad", "Repeticion: " + VEL.y + " Velocidad: " + String.format("%.1f", VEL.x));
             }
         }
@@ -291,7 +291,7 @@ public class game {
 
             @Override
             public void run() {
-                setEnemy(y /*- down*/, text, left, velocity);
+                setEnemy(y, text, left, velocity);
             }
 
             @Override
@@ -319,12 +319,6 @@ public class game {
                     enemies.remove(enemy);
                     super.cancel();
                 }
-            }
-
-            @Override
-            public boolean cancel() {
-
-                return true;
             }
         }
 
