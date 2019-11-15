@@ -59,7 +59,6 @@ public class game {
             "HUMEDAD",
             "ANUNCIOS",
             "TRÁNSITO",
-            "OBSTÁCULO",
             "CHIVO",
             "YO",
             "JAVA DE VUELTA",
@@ -123,15 +122,15 @@ public class game {
             Label button;
             if (index == 0){
                 button = Label.label("Jugar", "", labelHeight);
-                bienvenido = Label.label("Bienvenido a esquivar problemas :D", "", labelHeight/2.5f);
+                bienvenido = Label.label("Bienvenido a superar problemas :D", "", labelHeight/2.5f);
                 bienvenido.setPosition(_size.getWidth()/2, _size.getHeight()/2);
                 bienvenido.setColor(new CCColor3B(255,255,255));
                 super.addChild(bienvenido);
             }
             else {
                 button = Label.label("Reintentar", "", labelHeight);
-                puntaje = Label.label("Puntaje: " + points, "", labelHeight/2f);
-                puntajeMax = Label.label("Puntaje máximo: " + maxPoints, "", labelHeight/2f);
+                puntaje = Label.label("Superados: " + points, "", labelHeight/2f);
+                puntajeMax = Label.label("Superación máxima: " + maxPoints, "", labelHeight/2f);
                 puntaje.setColor(new CCColor3B(255,255,255));
                 puntajeMax.setColor(new CCColor3B(255,255,255));
                 puntaje.setAnchorPoint(0, 0);
@@ -377,7 +376,7 @@ public class game {
             player.setPosition(goTo.x + delta.x, goTo.y + delta.y);
             if (player.getPositionY() - maxYlimit > deltaPoints) {
                 deltaPoints=player.getPositionY()-maxYlimit;
-                if (deltaPoints/labelHeight > points) points = Math.round(deltaPoints/labelHeight);
+                if (deltaPoints/labelHeight > points) points = Math.round(deltaPoints/labelHeight*0.5f);
             }
             return true;
         }
