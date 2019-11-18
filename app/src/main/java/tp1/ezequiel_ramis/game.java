@@ -50,7 +50,7 @@ public class game {
             "NO COMPILA",
             "ANSIEDAD",
             "ANDROID STUDIO",
-            "GUIDO",
+            "ABULAFIA",
             "DEPRE",
             "MIGRAÑA",
             "NULL POINTER",
@@ -63,7 +63,17 @@ public class game {
             "YO",
             "JAVA DE VUELTA",
             "TAREA",
-            "TRABAJO"
+            "TRABAJO",
+            "SUBE SIN CARGA",
+            "MUCHO CALOR",
+            "30°C DE TÉRMICA",
+            "PASA DE UVA",
+            "MANO",
+            "NOVIEMBRE",
+            "DICIEMBRE",
+            "MARADONA",
+            "PROPAGANDA",
+            "PROCRASTINACIÓN"
     };
 
     float labelHeight = 170*.75f;
@@ -93,23 +103,6 @@ public class game {
         return scene;
     }
 
-    private Scene MainScene() {
-        Log.d("MainScene", "Comienza");
-        Scene scene = Scene.node();
-        Log.d("MainScene", "Agregar capa y sonido");
-        gameLayer gamelayer = new gameLayer();
-        scene.addChild(gamelayer);
-        gamelayer.tenPoints = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.ten_points);
-        gamelayer.fiftyPoints = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.fifty_points);
-        gamelayer.slap = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.slap);
-        gamelayer.bgMusic = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.un_problema_menos);
-        gamelayer.bgMusic.setLooping(true);
-        gamelayer.bgMusic.setVolume(.33f,.33f);
-        gamelayer.bgMusic.start();
-        Log.d("MainScene", "Devuelvo escena");
-        return scene;
-    }
-
     class uiLayer extends Layer {
         int index;
         Menu menu;
@@ -124,15 +117,15 @@ public class game {
                 button = Label.label("Jugar", "", labelHeight);
                 bienvenido = Label.label("Bienvenido a superar problemas :D", "", labelHeight/2.5f);
                 bienvenido.setPosition(_size.getWidth()/2, _size.getHeight()/2);
-                bienvenido.setColor(new CCColor3B(255,255,255));
+                setColorWhite(bienvenido);
                 super.addChild(bienvenido);
             }
             else {
                 button = Label.label("Reintentar", "", labelHeight);
                 puntaje = Label.label("Superados: " + points, "", labelHeight/2f);
                 puntajeMax = Label.label("Superación máxima: " + maxPoints, "", labelHeight/2f);
-                puntaje.setColor(new CCColor3B(255,255,255));
-                puntajeMax.setColor(new CCColor3B(255,255,255));
+                setColorWhite(puntaje);
+                setColorWhite(puntajeMax);
                 puntaje.setAnchorPoint(0, 0);
                 puntajeMax.setAnchorPoint(0, 0);
                 puntaje.setPosition(_size.getWidth()/4, _size.getHeight()/1.8f);
@@ -153,9 +146,17 @@ public class game {
         }
     }
 
-    class gameLayer extends Layer {
-        boolean left = new Random().nextBoolean();
+    private Scene MainScene() {
+        Log.d("MainScene", "Comienza");
+        Scene scene = Scene.node();
+        Log.d("MainScene", "Agregar capa y sonido");
+        gameLayer gamelayer = new gameLayer();
+        scene.addChild(gamelayer);
+        Log.d("MainScene", "Devuelvo escena");
+        return scene;
+    }
 
+    class gameLayer extends Layer {
         CCPoint VEL;
         int indexLastTile = 0;
 
@@ -183,48 +184,41 @@ public class game {
         MediaPlayer fiftyPoints;
         MediaPlayer slap;
         MediaPlayer bgMusic;
+
         int lastPoint = 0;
         Label pointsL;
+
         public gameLayer() {
             VEL = new CCPoint();
             VEL.x = velI;
             VEL.y = repetitionI;
             enemies = new ArrayList<>();
             delta = new CCPoint();
+            tenPoints = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.ten_points);
+            fiftyPoints = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.fifty_points);
+            slap = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.slap);
+            bgMusic = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.un_problema_menos);
+            bgMusic.setLooping(true);
+            bgMusic.setVolume(.33f,.33f);
+            bgMusic.start();                                                                //Un poco de "Un problema menos" de Cuarteto de Nos :D
+            pointsL = Label.label("0", "", labelHeight*.75f);
+            pointsL.setColor(new CCColor3B(255,200,0));
+            pointsL.setPosition(_size.getWidth()-125, _size.getHeight()-75);
+            super.addChild(pointsL);
             setPlayer();
             super.schedule("moveCamera", 1 / 30);
             super.schedule("setTiles", 1/30);
             super.schedule("startCollisions", 1/30);
             setIsTouchEnabled(true);
-            pointsL = Label.label("0", "", labelHeight*.75f);
-            pointsL.setColor(new CCColor3B(255,200,0));
-            pointsL.setPosition(_size.getWidth()-125, _size.getHeight()-75);
-            super.addChild(pointsL);
             Log.d("Puntos", "Agrego puntaje");
             super.schedule("setPoints", 1/30);
         }
 
-        void setPoints(float time) {
-            pointsL.setString(points+"");
-            Log.d("Puntos", points+"");
-            if (points != 0 && lastPoint < points) {
-                if (points % 50 == 0) {
-                    fiftyPoints.start();
-                    //cameraI*=1.1;
-                }
-                else if (points % 10 == 0) {
-                    tenPoints.start();
-                }
-                lastPoint = points;
-            }
-        }
-
-        void setTiles(float time) {
-            if (indexLastTile * labelHeight <= _size.getHeight() + down) {
-                AddTile addTile = new AddTile((indexLastTile + 5) * labelHeight*1.5f);
-                addTile.run();
-                indexLastTile++;
-            }
+        public void setPlayer() {
+            player = Label.label("YO", "", labelHeight*.75f);
+            setColorWhite(player);
+            player.setPosition(_size.getWidth() / 2, _size.getHeight()/2);
+            super.addChild(player);
         }
 
         void moveCamera(float time) {
@@ -238,21 +232,11 @@ public class game {
             VEL.x *= tick;
         }
 
-        void startCollisions(float time) {
-            for (Label enemy:enemies) {
-                if (isIntersected(player, enemy) ||
-                    right(player) < 0 ||
-                    left(player) > _size.getWidth() ||
-                    top(player) < 0 ||
-                    bot(player) > _size.getHeight()) {
-                    /*Perder*/
-                    slap.start();
-                    bgMusic.stop();
-                    if (points > maxPoints) maxPoints = points;
-                    super.removeAllChildren(true);
-                    enemies.clear();
-                    Director.sharedDirector().runWithScene(UI(1));
-                }
+        void setTiles(float time) {
+            if (indexLastTile * labelHeight <= _size.getHeight() + down) {                   // Si el tile está dentro de la pantalla
+                AddTile addTile = new AddTile((indexLastTile + 5) * labelHeight*1.5f);
+                addTile.run();
+                indexLastTile++;
             }
         }
 
@@ -265,11 +249,11 @@ public class game {
 
             @Override
             public void run() {
-                if (new Random().nextInt(100) > 20) {
+                if (new Random().nextInt(100) > 20) {                               // Probabilidad de que haya un tile para descansar
                     int indexText = new Random().nextInt(tilesText.length);
                     Label label = Label.label(tilesText[indexText], "", labelHeight);
                     //orientation = orientation ? false : true;
-                    orientation = new Random().nextBoolean();     //Se complica demasiado
+                    orientation = new Random().nextBoolean();                               // Mas diverso
                     Timer timer = new Timer();
                     SetEnemy setEnemy = new SetEnemy(y, tilesText[indexText], orientation, VEL.x);
                     timer.schedule(setEnemy, new Random().nextInt(10000), Math.round(label.getWidth() / _size.getWidth() * VEL.y));
@@ -302,6 +286,26 @@ public class game {
             }
         }
 
+
+        public void setEnemy(float y, String text, boolean left, float velN) {
+            double velocity;
+            float x;
+            Label enemy = Label.label(text, "", labelHeight);
+            x = left ? -enemy.getWidth() : _size.getWidth() + enemy.getWidth();
+            setColorWhite(enemy);
+            enemy.setPosition(x, y - down);
+            if (left) {
+                velocity = velN * sigmoid(enemy.getWidth());
+            } else {
+                velocity = -velN * sigmoid(enemy.getWidth());
+            }
+            super.addChild(enemy);
+            enemies.add(enemy);
+            Timer timer = new Timer();
+            MoveEnemy moveEnemy = new MoveEnemy(enemy, (float) velocity);
+            timer.schedule(moveEnemy, 0, 1000 / 30);
+        }
+
         class MoveEnemy extends TimerTask {
             Label enemy;
             float velocity;
@@ -314,9 +318,9 @@ public class game {
             @Override
             public void run() {
                 enemy.setPosition(enemy.getPositionX() + velocity, enemy.getPositionY());
-                if ((velocity > 0 && enemy.getPositionX()-enemy.getWidth()/2 > _size.getWidth())
-                ||  (velocity < 0 && enemy.getPositionX()+enemy.getWidth()/2 < 0)
-                ||  (enemy.getPositionY() < - enemy.getHeight())) {
+                if ((velocity > 0 && enemy.getPositionX()-enemy.getWidth()/2 > _size.getWidth())         // Si está fuera de la pantalla
+                        ||  (velocity < 0 && enemy.getPositionX()+enemy.getWidth()/2 < 0)
+                        ||  (enemy.getPositionY() < - enemy.getHeight())) {
                     removeChild(enemy, true);
                     enemies.remove(enemy);
                     super.cancel();
@@ -324,31 +328,36 @@ public class game {
             }
         }
 
-        public void setEnemy(float y, String text, boolean left, float velN) {
-            double velocity;
-            float x;
-            Label enemy = Label.label(text, "", labelHeight);
-            x = left ? -enemy.getWidth() : _size.getWidth() + enemy.getWidth();
-            enemy.setColor(new CCColor3B(255, 255, 255));
-            enemy.setPosition(x, y - down);
-            if (left) {
-                velocity = velN * sigmoid(enemy.getWidth());
-            } else {
-                velocity = -velN * sigmoid(enemy.getWidth());
+        void setPoints(float time) {
+            pointsL.setString(points+"");
+            Log.d("Puntos", points+"");
+            if (points != 0 && lastPoint < points) {
+                if (points % 50 == 0) {
+                    fiftyPoints.start();
+                }
+                else if (points % 10 == 0) {
+                    tenPoints.start();
+                }
+                lastPoint = points;
             }
-            super.addChild(enemy);
-            enemies.add(enemy);
-            //Log.d("Enemy", enemy.getWidth()+"");
-            Timer timer = new Timer();
-            MoveEnemy moveEnemy = new MoveEnemy(enemy, (float) velocity);
-            timer.schedule(moveEnemy, 0, 1000 / 30);
         }
 
-        public void setPlayer() {
-            player = Label.label("YO", "", labelHeight*.75f);
-            player.setColor(new CCColor3B(255, 255, 255));
-            player.setPosition(_size.getWidth() / 2, _size.getHeight()/2);
-            super.addChild(player);
+        void startCollisions(float time) {
+            for (Label enemy:enemies) {
+                if (isIntersected(player, enemy) ||              // Si colsisionan o el jugador está fuera de la pantalla
+                    right(player) < 0 ||
+                    left(player) > _size.getWidth() ||
+                    top(player) < 0 ||
+                    bot(player) > _size.getHeight()) {
+                    /*Perder*/
+                    slap.start();                                  // Te dan un sopapo
+                    bgMusic.stop();
+                    if (points > maxPoints) maxPoints = points;
+                    super.removeAllChildren(true);
+                    enemies.clear();
+                    Director.sharedDirector().runWithScene(UI(1));
+                }
+            }
         }
 
         boolean isIntersected(Label i0, Label i1) {
@@ -380,8 +389,6 @@ public class game {
 
         @Override
         public boolean ccTouchesEnded(MotionEvent event) {
-            delta.x = 0;
-            delta.y = 0;
             return true;
         }
     }
@@ -406,5 +413,8 @@ public class game {
         return label.getPositionY() - label.getHeight() / 2;
     }
 
+    void setColorWhite(Label label) {
+        label.setColor(new CCColor3B(255,255,255));
+    }
 
 }
