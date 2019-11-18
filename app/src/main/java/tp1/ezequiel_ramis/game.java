@@ -338,6 +338,7 @@ public class game {
             }
             super.addChild(enemy);
             enemies.add(enemy);
+            //Log.d("Enemy", enemy.getWidth()+"");
             Timer timer = new Timer();
             MoveEnemy moveEnemy = new MoveEnemy(enemy, (float) velocity);
             timer.schedule(moveEnemy, 0, 1000 / 30);
@@ -386,7 +387,7 @@ public class game {
     }
 
     Double sigmoid(float w) {
-        return 2/(1 + Math.pow(Math.E, .01*w)) + .5;
+        return 5/(1 + Math.pow(Math.E, .01*w)) + .5;
     }
 
     float left(Label label) {
