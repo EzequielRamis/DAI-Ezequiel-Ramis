@@ -249,6 +249,8 @@ public class game {
                     slap.start();
                     bgMusic.stop();
                     if (points > maxPoints) maxPoints = points;
+                    super.removeAllChildren(true);
+                    enemies.clear();
                     Director.sharedDirector().runWithScene(UI(1));
                 }
             }
