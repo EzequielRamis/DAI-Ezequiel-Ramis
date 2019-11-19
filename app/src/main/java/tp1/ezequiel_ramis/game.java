@@ -165,7 +165,7 @@ public class game {
         float velI = 15;
         float tick = 1.0005f;
 
-        float cameraI = 3;
+        float cameraI = 4;
 
         boolean orientation;
 
@@ -199,7 +199,10 @@ public class game {
             slap = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.slap);
             bgMusic = MediaPlayer.create(Director.sharedDirector().getActivity(), R.raw.un_problema_menos);
             bgMusic.setLooping(true);
-            bgMusic.setVolume(.33f,.33f);
+            bgMusic.setVolume(6,6);
+            tenPoints.setVolume(12,12);
+            fiftyPoints.setVolume(12,12);
+            slap.setVolume(12,12);
             bgMusic.start();                                                                //Un poco de "Un problema menos" de Cuarteto de Nos :D
             pointsL = Label.label("0", "", labelHeight*.75f);
             pointsL.setColor(new CCColor3B(255,200,0));
